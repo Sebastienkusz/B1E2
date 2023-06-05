@@ -1,10 +1,11 @@
 #!/bin/bash
 
-#Création du network security group 
+#Création du network security group qui sera ensuite associé à la VM Bastion
 az network nsg create \
   --resource-group Nabila_R \
   --name testnsg 
 
+#Création du network security group qui sera ensuite associé à la VM Nextcloud
 az network nsg create \
   --resource-group Nabila_R \
   --name testnsg1
@@ -23,6 +24,7 @@ az network nsg rule create \
   --destination-port-range 10022 \
   --access allow \
 
+#Création d'une règle pour ouvrir l'accès au port 80 de la VM Nextcloud
 az network nsg rule create \
   --resource-group Nabila_R \
   --nsg-name testnsg1 \

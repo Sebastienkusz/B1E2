@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 sudo apt update && sudo apt upgrade
 sudo apt install -y apache2 mariadb-server libapache2-mod-php php-gd php-mysql \
 php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-imagick php-zip
@@ -26,7 +28,6 @@ Dav off
 </VirtualHost>" > /etc/apache2/sites-available/nextcloud.conf
 
 sudo a2dissite 000-default.conf
-#sudo rm /var/www/html/index.html
 sudo a2ensite nextcloud.conf
 sudo a2enmod rewrite
 sudo systemctl restart apache2
