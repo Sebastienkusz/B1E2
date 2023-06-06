@@ -17,8 +17,8 @@
   --admin-username "adminshepard" \
   --ssh-key-value "~/.ssh/id_rsa.pub"
 
-#deploiement vmnextcloud
-    az vm create \
+ #deploiement vmnextcloud
+  az vm create \
   --resource-group Arnaud_G \
   --name VMnextcloud \
   --image ubuntu2204 \
