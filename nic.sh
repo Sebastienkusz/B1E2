@@ -2,8 +2,8 @@
 
 # Variables
 # Resource Group
-ResourceGroup="Sebastien_K"
-PreName="W-B1E2-"
+ResourceGroup="b1e2-gr1"
+PreName="B1E2-"
 
 # Virtual Network
 VNet=$PreName"Network"
