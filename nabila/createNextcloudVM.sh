@@ -15,6 +15,14 @@ az vm create \
     --custom-data configNextcloudVM.sh \
     --ssh-key-value ~/.ssh/id_rsa.pub
 
+#Création d'un disque, avec chiffrement géré par la plateforme Azure
+az disk create \
+    --resource-group Nabila_R \
+    --name MyDisk \
+    --size-gb 1024 \
+    --sku StandardSSD_LRS \
+    --encryption-type EncryptionAtRestWithPlatformKey
+
 #Attache disque sur la VM
 az vm disk attach \
     --resource-group Nabila_R \
