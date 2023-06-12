@@ -21,7 +21,7 @@ az vm create \
     --nsg testnsg \
     --public-ip-address-allocation static \
     --public-ip-address-dns-name mybastion2 \
-    --custom-data configBastion.sh \
+    --custom-data user_data/configBastion.sh \
     --ssh-key-value ~/.ssh/id_rsa.pub
 
 

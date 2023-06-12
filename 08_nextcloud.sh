@@ -12,7 +12,7 @@ az vm create \
     --nsg testnsg1 \
     --public-ip-address-allocation static \
     --public-ip-address-dns-name nextcloud01 \
-    --custom-data configNextcloudVM.sh \
+    --custom-data user_data/configNextcloudVM.sh \
     --ssh-key-value ~/.ssh/id_rsa.pub
 
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
@@ -41,6 +41,6 @@ az vm run-command invoke \
     --resource-group Nabila_R \
     -n NextcloudVM \
     --command-id RunShellScript \
-    --scripts @configSQL.sh 
+    --scripts @user_data/configSQL.sh 
 
 
