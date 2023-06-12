@@ -1,0 +1,23 @@
+
+
+
+
+sudo certbot --apache -c /etc/apache2/sites-available/nextcloud.conf -n --agree-tos -d nextcloudsimplon.westeurope.cloudapp.azure.com --register-unsafely-without-email 
+
+
+sudo apt install -y certbot python3-certbot-apache
+sudo systemctl reload apache2
+
+
+/var/www/html/nextcloud/config/config.php
+
+
+
+
+sed -i 's+DocumentRoot /var/www/html/+DocumentRoot /var/www/html/nextcloud+g' 
+
+Network
+Bastion
+Disque
+SQL server
+Nextcloud
