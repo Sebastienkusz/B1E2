@@ -1,3 +1,4 @@
+
 az network vnet create \
     --resource-group "Arnaud_G" \
     --name "myVnet" \
