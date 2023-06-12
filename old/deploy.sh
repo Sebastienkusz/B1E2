@@ -28,7 +28,7 @@
   --admin-username adminshepard \
   --ssh-key-value ~/.ssh/id_rsa.pub
   
-  az network public-ip create --resource-group <resource_group_name> --name <public_ip_name> --dns-name <dns_name_label>
+  #a voir plus tard checkouaz network public-ip create --resource-group <resource_group_name> --name <public_ip_name> --dns-name <dns_name_label>
 
 
  #deploiement d'un disque detaché sur Azure pour les datas des users Nextcloud
