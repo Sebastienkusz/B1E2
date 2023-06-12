@@ -34,7 +34,7 @@ az vm run-command invoke \
     --resource-group Nabila_R \
     -n NextcloudVM \
     --command-id RunShellScript \
-    --scripts @mountDisk.sh 
+    --scripts @user_data/mountDisk.sh 
 
 #Lancement de la configuration de la base de données
 az vm run-command invoke \

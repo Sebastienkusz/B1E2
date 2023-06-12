@@ -10,7 +10,6 @@ az network vnet subnet update \
     --delegations Microsoft.Sql/managedInstances
 
 
-
 az mysql flexible-server create \
     --resource-group Nabila_R \
     -n testbdd01 \
