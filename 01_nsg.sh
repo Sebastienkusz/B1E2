@@ -1,5 +1,5 @@
-#!bin/bash
-
+   #!bin/bash
+ 
     az network nsg create \
     --resource-group "b1e2-gr1" \
     --name "myNetworkSecurityGroup"
@@ -20,4 +20,4 @@
     --protocol tcp \
     --priority 1001 \
     --destination-port-range 80 \
-    --access allow
+    --access allow /
