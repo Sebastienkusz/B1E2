@@ -14,35 +14,21 @@ sudo unzip -d /var/www/html latest.zip
 sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
 sudo certbot --apache -n --agree-tos -d nextcloud01.westeurope.cloudapp.azure.com --register-unsafely-without-email
-#A corriger !################################################################
-# sudo echo "
-# <VirtualHost *:80>
-#         ServerAdmin webmaster@localhost
-#     DocumentRoot /var/www/html/nextcloud/
-# ServerName NAB
-# <Directory /var/www/html/nextcloud/>
-# Require all granted
-# AllowOverride All
-# Options FollowSymLinks MultiViews
-# <IfModule mod_dav.c>
-# Dav off
-# </IfModule>
-# </Directory></VirtualHost>" > /etc/apache2/sites-available/nextcloud.conf
-######################################################################
+
 
 
 sudo sed -i 's+DocumentRoot /var/www/html/+DocumentRoot /var/www/html/nextcloud/+g' /etc/apache2/sites-available/000-default-le-ssl.conf
 sudo chown -R www-data:www-data /var/www/html/nextcloud
 sudo systemctl restart apache2
 
-##Configuration du renouvellement automatique du certificat SSL
-# sudo chmod 777 /etc/crontab
-# sudo echo "SHELL=/bin/sh
-# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+#Configuration du renouvellement automatique du certificat SSL
+sudo chmod 777 /etc/crontab
+sudo echo "SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-# * 6 * * * r oot certbot -q renew --apache" >> /etc/crontab
+* 6 * * * r oot certbot -q renew --apache" >> /etc/crontab
 
-# sudo chmod 400 /etc/crontab
+sudo chmod 400 /etc/crontab
 
 
 
