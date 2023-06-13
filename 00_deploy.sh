@@ -9,7 +9,7 @@ export PreName="B1E2-"
 
 # Virtual Network
 export VNet=$PreName"Network"
-export AdresseStart="10.0.0.0"
+export AdresseStart="192.168.0.0"
 export NetworkRange="/16"
 
 # Subnet
@@ -31,6 +31,10 @@ export LabelBastionIPName="esan-preproduction-bastion"
 # Label Public IP VM Application Variables
 export LabelAppliIPName="esan-preproduction-nextcloud"
 
+#Noms des NSG
+export NsgAppliName="nsgNextcloud"
+export NsgBastionName="nsgBastion"
+
 # Network deployment
 ./01_network.sh
 
@@ -38,6 +42,6 @@ export LabelAppliIPName="esan-preproduction-nextcloud"
 ./02_bdd.sh
 
 # VM
-./03_vm.sh
+./03_virtMachine.sh
 
 # Monitoring
