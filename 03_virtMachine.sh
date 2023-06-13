@@ -85,16 +85,15 @@ az network public-ip update \
  --allocation-method Static
 
 ################## VM Bastion ##################
-vmname="Bastion"
-username="nabila"
+
 
 #Création du Bastion 
 az vm create \
     --resource-group $ResourceGroup\
-    --name $vmname \
+    --name $BastionVMName \
     --image Ubuntu2204\
     --public-ip-sku Standard \
-    --admin-username $username \
+    --admin-username $Username \
     --vnet-name $VNet \
     --subnet $Subnet \
     --nsg $NsgBastionName \
@@ -107,14 +106,12 @@ az vm create \
 #Création de la VM Nextcloud
 az vm create \
     --resource-group $ResourceGroup\
-    --name NextcloudVM \
+    --name $NextcloudVMName \
     --image Ubuntu2204\
     --public-ip-sku Standard \
-    --admin-username nabila \
+    --admin-username $Username\
     --vnet-name $VNet \
-    --subnet testauto-subnet \
-    --nsg testnsg1 \
-    --private-ip-address $AppliVMIPprivate \
+    --subnet $Subnet  \
     --nsg $NsgAppliName \
     --public-ip-address $AppliIPName \
     --custom-data user_data/configNextcloudVM.sh \
@@ -123,7 +120,7 @@ az vm create \
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
 az disk create \
     --resource-group $ResourceGroup\
-    --name MyDisk \
+    --name $DiskName \
     --size-gb 1024 \
     --sku StandardSSD_LRS \
     --encryption-type EncryptionAtRestWithPlatformKey
@@ -131,19 +128,19 @@ az disk create \
 #Attache disque sur la VM
 az vm disk attach \
     --resource-group $ResourceGroup\
-    --vm-name NextcloudVM \
-    --name MyDisk \
+    --vm-name $NextcloudVMName \
+    --name $DiskName \
 
 #Lancement du montage du disque
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n NextcloudVM \
+    -n $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/mountDisk.sh 
 
 #Lancement de la configuration de la base de données
 az vm run-command invoke \
     --resource-group $ResourceGroup\
-    -n NextcloudVM \
+    -n $NextcloudVMName\
     --command-id RunShellScript \
     --scripts @user_data/configSQL.sh 

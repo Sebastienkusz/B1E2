@@ -35,6 +35,14 @@ export LabelAppliIPName="esan-preproduction-nextcloud"
 export NsgAppliName="nsgNextcloud"
 export NsgBastionName="nsgBastion"
 
+#Noms des ressources
+export BastionVMName="preproduction-vm-bastion"
+export NextcloudVMName="preproduction-vm-Nextcloud"
+export BDDName="dsi-bdd-sql"
+export DiskName="preproduction-disk-esan"
+
+#Utilisateur
+export Username="nabila"
 # Network deployment
 ./01_network.sh
 
@@ -42,6 +50,6 @@ export NsgBastionName="nsgBastion"
 ./02_bdd.sh
 
 # VM
-./03_virtMachine.sh
+bash 03_virtMachine.sh
 
 # Monitoring

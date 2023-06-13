@@ -11,11 +11,11 @@ az network vnet subnet update \
 
 az mysql flexible-server create \
     --resource-group $ResourceGroup\
-    -n testbdd01 \
-    --location westeurope \
+    -n $BDDName \
+    --location $Location\
     --vnet $VNet\
     --version 8.0.21\
-    -u nabila \
+    -u $Username \
     -p password0606! \
     --yes
 
@@ -23,7 +23,7 @@ az mysql flexible-server create \
 
 az mysql flexible-server db create \
     --resource-group $ResourceGroup \
-    --server-name testbdd01  \
+    --server-name $BDDName  \
     --database-name nextcloud 
 
 

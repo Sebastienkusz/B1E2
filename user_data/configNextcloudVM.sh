@@ -26,7 +26,7 @@ sudo chmod 777 /etc/crontab
 sudo echo "SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-* 6 * * * r oot certbot -q renew --apache" >> /etc/crontab
+* 6 * * * root certbot -q renew --apache" >> /etc/crontab
 
 sudo chmod 400 /etc/crontab
 

@@ -9,10 +9,10 @@ sudo wget --no-check-certificate -O /var/www/html/nextcloud/DigiCertGlobalRootCA
 sudo apt-get -y update
 sudo apt-get install -y mysql-client
 
-sudo echo "USE nextcloud;" | mysql -h testbdd01.mysql.database.azure.com -u nabila -p"password0606!" 
-sudo echo "CREATE USER 'sqluser'@' %' IDENTIFIED BY 'password';" | mysql -h testbdd01.mysql.database.azure.com -u nabila -p"password0606!" 
-sudo echo "GRANT ALL PRIVILEGES ON nextcloud.* TO 'sqluser'@'%';" | mysql -h testbdd01.mysql.database.azure.com -u nabila -p"password0606!"
-sudo echo "FLUSH PRIVILEGES;" | mysql -h testbdd01.mysql.database.azure.com -u nabila -p"password0606!"
+sudo echo "USE nextcloud;" | mysql -h dsi-bdd-sql.mysql.database.azure.com -u nabila -p"password0606!" 
+sudo echo "CREATE USER 'sqluser'@' %' IDENTIFIED BY 'password';" | mysql -h dsi-bdd-sql.mysql.database.azure.com -u nabila -p"password0606!" 
+sudo echo "GRANT ALL PRIVILEGES ON nextcloud.* TO 'sqluser'@'%';" | mysql -h dsi-bdd-sql.mysql.database.azure.com -u nabila -p"password0606!"
+sudo echo "FLUSH PRIVILEGES;" | mysql -h dsi-bdd-sql.mysql.database.azure.com -u nabila -p"password0606!"
 
 #A modifier 
 # echo "  'dbdriveroptions' => array(
