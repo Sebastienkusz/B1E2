@@ -9,7 +9,7 @@ export PreName="Preproduction-"
 
 # Virtual Network
 export VNet=$PreName"Network-Nextcloud"
-export AdresseStart="192.168.0.0"
+export AdresseStart="11.0.0.0"
 export NetworkRange="/16"
 
 # Subnet
@@ -33,13 +33,24 @@ export LabelAppliIPName="esan-preproduction-nextcloud"
 
 #Noms des NSG
 export NsgAppliName=$PreName"Nsg-Nextcloud"
-export NsgBastionName=$PreName"Nsg_Bastion"
+export NsgBastionName=$PreName"Nsg-Bastion"
+
+export NsgBastionRuleIPFilter="82.126.234.200"
+export NsgBastionRuleSshPort="10022"
+
 
 #Noms des ressources
 export BastionVMName=$PreName"Vm-Bastion"
 export NextcloudVMName=$PreName"Vm-Nextcloud"
 export BDDName=$PreName"Bdd-Sql"
 export DiskName=$PreName"Disk-Nextcloud"
+
+export ImageOs="Ubuntu2204"
+export BastionVMSize="Standard_B2s"
+export NextcloudVMSize="Standard_D2s_v3"
+
+export BastionVMIPprivate="11.0.0.5"
+export NextcloudVMIPprivate="11.0.0.6"
 
 #Utilisateur
 export Username="sebastien"
