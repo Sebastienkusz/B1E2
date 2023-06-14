@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 
 ################## NSG ##################
@@ -52,6 +52,20 @@ az network nsg rule create \
     --destination-port-range 443 \
     --access allow \
 
+az network nsg rule create \
+    --resource-group $ResourceGroup \
+    --nsg-name $NsgAppliName \
+    --name "Monitor" \
+    --protocol tcp \
+    --direction inbound \
+    --priority 1001 \
+    --source-address-prefix '*' \
+    --source-port-range '*' \
+    --destination-address-prefix '*' \
+    --destination-port-range 514 \
+    --access allow \
+
+
 ################## IP Publics ##################
 # Public IP VM Bastion Creation
 az network public-ip create \
@@ -99,7 +113,7 @@ az vm create \
     --nsg $NsgBastionName \
     --public-ip-address $BastionIPName \
     --custom-data user_data/configBastion.sh \
-    --ssh-key-value ~/.ssh/id_rsa.pub
+    --ssh-key-value ssh_keys/auto_rsa.pub
 
 
 ################## VM Application ##################
@@ -107,15 +121,15 @@ az vm create \
 az vm create \
     --resource-group $ResourceGroup\
     --name $NextcloudVMName \
-    --image Ubuntu2204\
+    --image UbuntuLTS\
     --public-ip-sku Standard \
-    --admin-username $Username\
+    --admin-username $Username \
     --vnet-name $VNet \
-    --subnet $Subnet  \
+    --subnet $Subnet \
     --nsg $NsgAppliName \
     --public-ip-address $AppliIPName \
     --custom-data user_data/configNextcloudVM.sh \
-    --ssh-key-value ~/.ssh/id_rsa.pub
+    --ssh-key-value ssh_keys/auto_rsa.pub
 
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
 az disk create \
@@ -124,6 +138,12 @@ az disk create \
     --size-gb 1024 \
     --sku StandardSSD_LRS \
     --encryption-type EncryptionAtRestWithPlatformKey
+
+# az vm run-command invoke \
+#     --resource-group $ResourceGroup \
+#     -n $NextcloudVMName \
+#     --command-id RunShellScript \
+#     --scripts @user_data/configNextcloudVM.sh 
 
 #Attache disque sur la VM
 az vm disk attach \
