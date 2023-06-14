@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/bash -x 
+
 ################# SCRIPT MONTAGE DISQUE SUR VM NEXTCLOUD + MODIFICATION DU DOSSIER D'ECRITURE DES DONNEES UTILISATEURS NEXTCLOUD ########################
 
 ##Montage du disque

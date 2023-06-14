@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 
 ##Installation Apache + Nextcloud
@@ -13,7 +13,7 @@ sudo unzip -d /var/www/html latest.zip
 ##Installation du certificat SSL, avec mise à jour du virtualhost
 sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
-sudo certbot --apache -n --agree-tos -d nextcloud01.westeurope.cloudapp.azure.com --register-unsafely-without-email
+sudo certbot --apache -n --agree-tos -d esan-preproduction-nextcloud.westeurope.cloudapp.azure.com --register-unsafely-without-email
 
 
 
