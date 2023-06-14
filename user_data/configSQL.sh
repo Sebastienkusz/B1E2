@@ -1,6 +1,6 @@
-#!/bin/bash
-###################################### SCRIPT CONFIGURATION DE LA BASE DE DONNEES + AJOUT CERTIFICAT SSL AZURE ###############################################
+#!/bin/bash -x
 
+###################################### SCRIPT CONFIGURATION DE LA BASE DE DONNEES + AJOUT CERTIFICAT SSL AZURE ###############################################
 
 #Ajout du certificat SSL Azure pour la base de données
 sudo wget --no-check-certificate -O /var/www/html/nextcloud/DigiCertGlobalRootCA.crt.pem https://dl.cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem  
