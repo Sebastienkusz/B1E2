@@ -10,7 +10,7 @@ az network vnet create \
 
 # Network Interface Card Creation
 az network nic create \
-    --resource-group $ResourceGroup \
-    --name $Nic \
-    --vnet-name $VNet \
-    --subnet $Subnet
+  --resource-group $ResourceGroup \
+  --name $Nic \
+  --vnet-name $VNet \
+  --subnet $Subnet
