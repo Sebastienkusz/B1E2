@@ -121,7 +121,7 @@ az vm create \
 az vm create \
     --resource-group $ResourceGroup\
     --name $NextcloudVMName \
-    --image UbuntuLTS\
+    --image Ubuntu2204 \
     --public-ip-sku Standard \
     --admin-username $Username \
     --vnet-name $VNet \

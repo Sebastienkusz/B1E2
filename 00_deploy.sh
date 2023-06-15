@@ -44,10 +44,10 @@ export DiskName="preproduction-disk-esan"
 #Utilisateur
 export Username="nabila"
 # Network deployment
-# ./01_network.sh
+./01_network.sh
 
-# # SQL
-# ./02_bdd.sh
+# SQL
+./02_bdd.sh
 
 # VM
 ./03_virtMachine.sh
