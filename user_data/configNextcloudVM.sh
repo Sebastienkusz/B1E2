@@ -9,11 +9,11 @@ DNSNextcloud=$LabelAppliIPName"."$Location".cloudapp.azure.com"
 
 ##Installation Apache + Nextcloud
 sudo apt -y update
-sudo apt install -y apache2 mariadb-server libapache2-mod-php php-{gd,mysql,curl,mbstring,intl,gmp,bcmath,xml,imagick,zip}
+sudo apt-get install -y apache2 libapache2-mod-php php-gd php-mysql
+sudo apt-get install -y php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-imagick php-zip
 sudo wget https://download.nextcloud.com/server/releases/latest.zip
 sudo apt install -y unzip
 sudo unzip -d /var/www/html latest.zip
-
 
 sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
@@ -24,7 +24,7 @@ echo "<VirtualHost *:80>
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 RewriteEngine on
-RewriteCond %{SERVER_NAME} =esan-preproduction-nextcloud01.westeurope.cloudapp.azure.com
+RewriteCond %{SERVER_NAME} =$DNSNextcloud
 RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 </VirtualHost>
 <IfModule mod_ssl.c>
@@ -33,9 +33,9 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
         DocumentRoot /var/www/html/nextcloud/
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
-ServerName esan-preproduction-nextcloud01.westeurope.cloudapp.azure.com
-SSLCertificateFile /etc/letsencrypt/live/esan-preproduction-nextcloud01.westeurope.cloudapp.azure.com/fullchain.pem
-SSLCertificateKeyFile /etc/letsencrypt/live/esan-preproduction-nextcloud01.westeurope.cloudapp.azure.com/privkey.pem
+ServerName $DNSNextcloud
+SSLCertificateFile /etc/letsencrypt/live/$DNSNextcloud/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/$DNSNextcloud/privkey.pem
 Include /etc/letsencrypt/options-ssl-apache.conf
 </VirtualHost>
 </IfModule>" > /etc/apache2/sites-available/nextcloud.conf

@@ -14,7 +14,7 @@ sudo su <<EOF
 chmod 640 /home/$Usertwo/.ssh/authorized_keys
 chmod 700 /home/$Usertwo/.ssh/
 chown -R $Usertwo:$Usertwo /home/$Usertwo/.ssh/
-echo $Usertwo ALL=(ALL) NOPASSWD:ALL >> /etc/sudoers
+echo "$Usertwo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 EOF
 
 sudo adduser --gecos '' --disabled-password $Userthree
@@ -27,5 +27,5 @@ sudo su <<EOF
 chmod 640 /home/$Userthree/.ssh/authorized_keys
 chmod 700 /home/$Userthree/.ssh/
 chown -R $Userthree:$Userthree /home/$Userthree/.ssh/
-echo $Userthree ALL=(ALL) NOPASSWD:ALL >> /etc/sudoers
+echo "$Userthree ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 EOF
