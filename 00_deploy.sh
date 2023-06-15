@@ -2,7 +2,7 @@
 
 # Variables
 # Resource Group
-export ResourceGroup="Nabila_R"
+export ResourceGroup="b1e2-gr1"
 export Location="westeurope"
 export Zone="3"
 export PreName="Preproduction-"
@@ -26,10 +26,10 @@ export BastionIPName=$PreName"IP-Bastion"
 export AppliIPName=$PreName"IP-Nextcloud"
 
 # Label Public IP VM Bastion Variables
-export LabelBastionIPName="esan-preproduction-bastion01"
+export LabelBastionIPName="esan-preproduction-bastion"
 
 # Label Public IP VM Application Variables
-export LabelAppliIPName="esan-preproduction-nextcloud01"
+export LabelAppliIPName="esan-preproduction-nextcloud"
 
 #Noms des NSG
 export NsgAppliName=$PreName"Nsg-Nextcloud"
@@ -53,7 +53,7 @@ export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
 #Utilisateur
-export Username="sebastien"
+export Username="nabila"
 
 
 # Network deployment
@@ -66,4 +66,4 @@ export Username="sebastien"
 ./03_virtMachine.sh
 
 # Monitoring
-./04_monitoring.sh
+#./04_monitoring.sh

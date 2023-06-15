@@ -31,4 +31,3 @@ az vm extension set \
   --vm-name preproduction-vm-Nextcloud02 \
   --version 1.26.2 \
   --enable-auto-upgrade true
-

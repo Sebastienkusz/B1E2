@@ -112,25 +112,16 @@ az vm create \
     --public-ip-address $BastionIPName \
     --private-ip-address $BastionVMIPprivate \
     --custom-data user_data/configBastion.sh \
-<<<<<<< HEAD
     --ssh-key-value ssh_keys/auto_rsa.pub
-
-=======
-    --ssh-key-value ssh_keys/B1E2_seb_rsa.pub
->>>>>>> main
 
 ################## VM Application ##################
 #Création de la VM Nextcloud
 az vm create \
     --resource-group $ResourceGroup \
     --name $NextcloudVMName \
-<<<<<<< HEAD
-    --image Ubuntu2204 \
-=======
     --location $Location \
     --size $NextcloudVMSize \
     --image $ImageOs \
->>>>>>> main
     --public-ip-sku Standard \
     --admin-username $Username \
     --vnet-name $VNet \
@@ -139,11 +130,7 @@ az vm create \
     --public-ip-address $AppliIPName \
     --private-ip-address $NextcloudVMIPprivate \
     --custom-data user_data/configNextcloudVM.sh \
-<<<<<<< HEAD
     --ssh-key-value ssh_keys/auto_rsa.pub
-=======
-    --ssh-key-value ssh_keys/B1E2_seb_rsa.pub
->>>>>>> main
 
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
 az disk create \

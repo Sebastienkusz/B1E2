@@ -1,19 +1,20 @@
 #!/bin/bash
 
-Admin="sebastien"
-Usertwo="nabila"
+Admin="nabila"
+Usertwo="sebastien"
 Userthree="arnaud"
 
 sudo adduser --gecos '' --disabled-password $Usertwo
 Groupes=$(groups $Admin | sed "s/"$Admin" : //" | sed "s/"$Admin" //" | sed "s/ /,/g")
 sudo usermod -a -G $Groupes $Usertwo
-KeyVarTmp="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC7W0gL4i4EsD4rhhvUM+e/yr56n3FrbjM4ob9rJ+NRiW0lWqRz+Nvb5DH8SlJmZrVo0szN1xZ490WXj4E5mZU9YuddNu1O/Y4rNJBcLvCeQebOLcs5710XOieucK2FG+NfUTXRmgyFBNm4hfWoRwPcjRULAAsSLGo8VkMxCR965jPaz4jVm4qxOBYNYATN48oPyC2Tf6sreHEld4DgNjBGACASjYDH2+AaaCTQWJa0YpCMyZlzC1++hwRKrpgyvqmUISPQoS4rNRjI1Rsc9zJtixBuLLi5qww70RlPBt5vG2mj4rOssgltC/MashrTJes7398pcngIqsGA2VySPDMvpyVyRYIBnjMJY1sS6zKmYIiXJnQPdn/pcj/442BALUgIP45F6V9OwUiX0JT1HZi5NU79YJKtD94okEU6SPsJqoO2IDkNNMI9b5ZGojnvJT373Ho2X+c6g0WzoM+ViJbjXfYc6fOOg7MLalsAkDSNbQ6l2qNnX+RG10RtNl+K4BI8qOtwKuPuq7tWP4gCKaVzbQ4dk2CL5TwQ3AGDKdnbDx0OEmD8o6Vk9aKx643lUc6P4z3KSr7PeWbJqt7dFQpoZzmupQ9zVXRvfR/c7rmE/LD5joh+tgYUIt0ufwkRvZccYM4FzuXFAT4W+TZgd6lpRc2IS2jU+vk4qLWGLs5YzQ== Nextcloud"
+KeyVarTmp="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCmGVjetY9Ohwzfx6hDCs+eXMVnjYZdSW5Lhq5mMzbm9OMI+xM96RINmhJs6VagtuksAfkTnoPqvlXXjCXrzCxgd1mUzJQpslJTQh7cNoLrRsqt5w4e8mZ7Q96boibU9e9y8gIhGQTAkFj9T373kyvP33CJsX4IiaYELkHNyqcovcmzZKXzUj304yoAlJ5zYDkuuvSNO19+eiahd3wVTQooPWtmppW0sue5tX7x7CzVqTdkCyweAgy9/2NJqY83/wOeZHbvk21ubJ71f4jNorr91XCpbKzTA2KY532BTdout3RtEzIfXUFll2EJlECoTH1aeDisHxU2a3VfvfoHhf17RwN8WArVPfIfwFpg5D52Df1qb+WDlh/3EMFmi5y2fxgQlqeZ0ErB49Xh9W3E9OEFBrNwtC5aZUSBsC6NJuetPzg43C1Lhzrg9aVXBdPE9tze1ufI0Jyp//xcQGHlsXUx3IaDY8vTrs9Ce7rpsUrkqfGE9lArc3aE+fltvno0UlFzy6jLBxBXdPlzYHkckCNYdQNn/TdXMjYeFWPK5jxGRrQyGmc3QRL61E0mM51YfkuVX/fyx4DANa/AvyqYoIAjI4DhjXYQLyTUznCMLixEf1Sb4wS7IbReXP4b9XF5bia/zx3Vw8yO5bBq3mMzNl9IUowqDpYB1cDNXFM5hD+NLw== kusz.sebastien@gmail.com"
 sudo mkdir "/home/"$Usertwo"/.ssh"
 sudo echo $KeyVarTmp >> "/home/"$Usertwo"/.ssh/authorized_keys"
 sudo su <<EOF
 chmod 640 /home/$Usertwo/.ssh/authorized_keys
 chmod 700 /home/$Usertwo/.ssh/
 chown -R $Usertwo:$Usertwo /home/$Usertwo/.ssh/
+echo \""$Usertwo" ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers
 EOF
 
 sudo adduser --gecos '' --disabled-password $Userthree
