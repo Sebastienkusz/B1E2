@@ -1,20 +1,24 @@
 #!/bin/bash -x
 
+# Variables
+LabelAppliIPName="esan-preproduction-nextcloud"
+Location="westeurope"
+
+# Fixes
+DNSNextcloud=$LabelAppliIPName"."$Location".cloudapp.azure.com"
 
 ##Installation Apache + Nextcloud
 sudo apt -y update
-sudo apt install -y apache2 mariadb-server libapache2-mod-php php-gd php-mysql \
-php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-imagick php-zip
+sudo apt install -y apache2 mariadb-server libapache2-mod-php php-{gd,mysql,curl,mbstring,intl,gmp,bcmath,xml,imagick,zip}
 sudo wget https://download.nextcloud.com/server/releases/latest.zip
 sudo apt install -y unzip
 sudo unzip -d /var/www/html latest.zip
 
-
 ##Installation du certificat SSL, avec mise à jour du virtualhost
-sudo snap install core; sudo snap refresh core
+sudo snap install core
+sudo snap refresh core
 sudo snap install --classic certbot
-sudo certbot --apache -n --agree-tos -d esan-preproduction-nextcloud.westeurope.cloudapp.azure.com --register-unsafely-without-email
-
+sudo certbot --apache -n --agree-tos -d $DNSNextcloud --register-unsafely-without-email
 
 
 sudo sed -i 's+DocumentRoot /var/www/html/+DocumentRoot /var/www/html/nextcloud/+g' /etc/apache2/sites-available/000-default-le-ssl.conf
@@ -29,6 +33,3 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 * 6 * * * root certbot -q renew --apache" >> /etc/crontab
 
 sudo chmod 400 /etc/crontab
-
-
-
