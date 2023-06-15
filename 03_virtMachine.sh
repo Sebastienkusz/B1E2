@@ -49,6 +49,20 @@ az network nsg rule create \
     --destination-port-range 443 \
     --access allow
 
+az network nsg rule create \
+    --resource-group $ResourceGroup \
+    --nsg-name $NsgAppliName \
+    --name "Monitor" \
+    --protocol tcp \
+    --direction inbound \
+    --priority 1001 \
+    --source-address-prefix '*' \
+    --source-port-range '*' \
+    --destination-address-prefix '*' \
+    --destination-port-range 514 \
+    --access allow \
+
+
 ################## IP Publics ##################
 # Public IP VM Bastion Creation
 az network public-ip create \
@@ -98,25 +112,38 @@ az vm create \
     --public-ip-address $BastionIPName \
     --private-ip-address $BastionVMIPprivate \
     --custom-data user_data/configBastion.sh \
+<<<<<<< HEAD
+    --ssh-key-value ssh_keys/auto_rsa.pub
+
+=======
     --ssh-key-value ssh_keys/B1E2_seb_rsa.pub
+>>>>>>> main
 
 ################## VM Application ##################
 #Création de la VM Nextcloud
 az vm create \
     --resource-group $ResourceGroup \
     --name $NextcloudVMName \
+<<<<<<< HEAD
+    --image Ubuntu2204 \
+=======
     --location $Location \
     --size $NextcloudVMSize \
     --image $ImageOs \
+>>>>>>> main
     --public-ip-sku Standard \
     --admin-username $Username \
     --vnet-name $VNet \
-    --subnet $Subnet  \
+    --subnet $Subnet \
     --nsg $NsgAppliName \
     --public-ip-address $AppliIPName \
     --private-ip-address $NextcloudVMIPprivate \
     --custom-data user_data/configNextcloudVM.sh \
+<<<<<<< HEAD
+    --ssh-key-value ssh_keys/auto_rsa.pub
+=======
     --ssh-key-value ssh_keys/B1E2_seb_rsa.pub
+>>>>>>> main
 
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
 az disk create \
@@ -125,6 +152,12 @@ az disk create \
     --size-gb 1024 \
     --sku StandardSSD_LRS \
     --encryption-type EncryptionAtRestWithPlatformKey
+
+# az vm run-command invoke \
+#     --resource-group $ResourceGroup \
+#     -n $NextcloudVMName \
+#     --command-id RunShellScript \
+#     --scripts @user_data/configNextcloudVM.sh 
 
 #Attache disque sur la VM
 az vm disk attach \
