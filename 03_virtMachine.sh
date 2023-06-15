@@ -1,28 +1,25 @@
 #!/bin/bash
 
-
 ################## NSG ##################
-    #nsg VM Bastion
+# nsg VM Bastion
 az network nsg create \
     --resource-group $ResourceGroup \
     --name $NsgBastionName
 
 az network nsg rule create \
-  --resource-group $ResourceGroup  \
-  --nsg-name $NsgBastionName\
-  --name SSHrule \
-  --protocol tcp \
-  --direction inbound \
-  --priority 1000 \
-  --source-address-prefix 82.126.234.200\
-  --source-port-range '*' \
-  --destination-address-prefix '*' \
-  --destination-port-range 10022 \
-  --access allow \
+    --resource-group $ResourceGroup  \
+    --nsg-name $NsgBastionName \
+    --name SSHrule \
+    --protocol tcp \
+    --direction inbound \
+    --priority 1000 \
+    --source-address-prefix $NsgBastionRuleIPFilter \
+    --source-port-range '*' \
+    --destination-address-prefix '*' \
+    --destination-port-range $NsgBastionRuleSshPort \
+    --access allow
    
-   
-   #nsg Vm Nextcloud
-
+# nsg Vm Nextcloud
 az network nsg create \
     --resource-group $ResourceGroup \
     --name $NsgAppliName
@@ -37,7 +34,7 @@ az network nsg rule create \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 80 \
-    --access allow \
+    --access allow
 
 az network nsg rule create \
     --resource-group $ResourceGroup \
@@ -50,7 +47,7 @@ az network nsg rule create \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 443 \
-    --access allow \
+    --access allow
 
 az network nsg rule create \
     --resource-group $ResourceGroup \
@@ -98,42 +95,59 @@ az network public-ip update \
  --dns-name $LabelAppliIPName \
  --allocation-method Static
 
-################## VM Bastion ##################
-
+################# VM Bastion ##################
 
 #Création du Bastion 
 az vm create \
-    --resource-group $ResourceGroup\
+    --resource-group $ResourceGroup \
     --name $BastionVMName \
-    --image Ubuntu2204\
+    --location $Location \
+    --size $BastionVMSize \
+    --image $ImageOs \
     --public-ip-sku Standard \
     --admin-username $Username \
     --vnet-name $VNet \
     --subnet $Subnet \
     --nsg $NsgBastionName \
     --public-ip-address $BastionIPName \
+    --private-ip-address $BastionVMIPprivate \
     --custom-data user_data/configBastion.sh \
+<<<<<<< HEAD
     --ssh-key-value ssh_keys/auto_rsa.pub
 
+=======
+    --ssh-key-value ssh_keys/B1E2_seb_rsa.pub
+>>>>>>> main
 
 ################## VM Application ##################
 #Création de la VM Nextcloud
 az vm create \
-    --resource-group $ResourceGroup\
+    --resource-group $ResourceGroup \
     --name $NextcloudVMName \
+<<<<<<< HEAD
     --image Ubuntu2204 \
+=======
+    --location $Location \
+    --size $NextcloudVMSize \
+    --image $ImageOs \
+>>>>>>> main
     --public-ip-sku Standard \
     --admin-username $Username \
     --vnet-name $VNet \
     --subnet $Subnet \
     --nsg $NsgAppliName \
     --public-ip-address $AppliIPName \
+    --private-ip-address $NextcloudVMIPprivate \
     --custom-data user_data/configNextcloudVM.sh \
+<<<<<<< HEAD
     --ssh-key-value ssh_keys/auto_rsa.pub
+=======
+    --ssh-key-value ssh_keys/B1E2_seb_rsa.pub
+>>>>>>> main
 
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
 az disk create \
-    --resource-group $ResourceGroup\
+    --resource-group $ResourceGroup \
     --name $DiskName \
     --size-gb 1024 \
     --sku StandardSSD_LRS \
@@ -147,7 +161,7 @@ az disk create \
 
 #Attache disque sur la VM
 az vm disk attach \
-    --resource-group $ResourceGroup\
+    --resource-group $ResourceGroup \
     --vm-name $NextcloudVMName \
     --name $DiskName \
 
@@ -160,7 +174,21 @@ az vm run-command invoke \
 
 #Lancement de la configuration de la base de données
 az vm run-command invoke \
-    --resource-group $ResourceGroup\
-    -n $NextcloudVMName\
+    --resource-group $ResourceGroup \
+    -n $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/configSQL.sh 
+
+#Ajout des utilisateurs admins à la VM Bastion
+az vm run-command invoke \
+    --resource-group $ResourceGroup \
+    -n $BastionVMName \
+    --command-id RunShellScript \
+    --scripts @./user_data/addusers.sh
+
+#Ajout des utilisateurs admins à la VM Nextcloud
+az vm run-command invoke \
+    --resource-group $ResourceGroup \
+    -n $NextcloudVMName \
+    --command-id RunShellScript \
+    --scripts @./user_data/addusers.sh

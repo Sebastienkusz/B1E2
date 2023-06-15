@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 sudo apt -y update
 sudo apt install -y mysql-client

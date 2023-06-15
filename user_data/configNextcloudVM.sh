@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 sudo apt-get -y update 
 sudo apt-get install -y apache2 libapache2-mod-php php-gd php-mysql
@@ -10,7 +10,7 @@ sudo unzip -d /var/www/html latest.zip
 
 sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
-sudo certbot --apache -n --agree-tos -d esan-preproduction-nextcloud01.westeurope.cloudapp.azure.com --register-unsafely-without-email
+sudo certbot --apache -n --agree-tos -d esan-preproduction-nextcloud.westeurope.cloudapp.azure.com --register-unsafely-without-email
 echo "<VirtualHost *:80>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/html/nextcloud/
