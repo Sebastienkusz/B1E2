@@ -53,8 +53,9 @@ export NextcloudVMSize="Standard_D2s_v3"
 export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
-#Utilisateur
+# Utilisateur
 export Username="nabila"
+export UserKeyName="auto_rsa.pub"
 
 
 # Network deployment
@@ -63,8 +64,32 @@ export Username="nabila"
 # SQL
 ./02_bdd.sh
 
-# VM
+VM
 ./03_virtMachine.sh
 
 # Monitoring
 #./04_monitoring.sh
+
+
+echo "---------------------------------------------------------------------------------------------------------------"
+echo " "
+echo " Infrastruture déployée "
+echo " ---------------------- "
+echo " Bastion :"
+echo " - fqdn : "$LabelBastionIPName"."$Location".cloudapp.azure.com"
+echo " - port ssh : "$NsgBastionRuleSshPort
+echo " - adresse ip privée :"$BastionVMIPprivate
+echo " - filtrage IP par ssh : Accès uniquement avec l'adresse IP publique "$NsgBastionRuleIPFilter
+echo " - nom du premier administrateur : "$Username
+echo " "
+echo " - exemple de Connexion ssh : ssh "$Username"@"$LabelBastionIPName"."$Location".cloudapp.azure.com -p "$NsgBastionRuleSshPort
+echo "   Précisez la clé ssh avec le paramètre -i suivi du chemin et du nom de la clé"
+echo "   et utilsez le rebond avec le paramètre -A"
+echo " "
+echo " VM Nextcloud :"
+echo " - adresse ip privée : "$NextcloudVMIPprivate
+echo " - exemple de Connexion ssh : ssh "$Username"@"$NextcloudVMIPprivate
+echo " "
+echo "---------------------------------------------------------------------------------------------------------------"
+echo " Adresse Internet : "$LabelAppliIPName"."$Location".cloudapp.azure.com"
+echo "---------------------------------------------------------------------------------------------------------------"
