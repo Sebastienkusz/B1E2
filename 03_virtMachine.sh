@@ -17,7 +17,7 @@ az network nsg rule create \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range $NsgBastionRuleSshPort \
-    --access allow
+    --access Allow
    
 # nsg Vm Nextcloud
 az network nsg create \
@@ -28,13 +28,14 @@ az network nsg rule create \
     --resource-group $ResourceGroup \
     --nsg-name $NsgAppliName \
     --name "HTTPrule " \
+    --protocol tcp \
     --direction inbound \
     --priority 1000 \
     --source-address-prefix '*' \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 80 \
-    --access allow
+    --access Allow
 
 az network nsg rule create \
     --resource-group $ResourceGroup \
@@ -47,7 +48,7 @@ az network nsg rule create \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 443 \
-    --access allow
+    --access Allow
 
 az network nsg rule create \
     --resource-group $ResourceGroup \
@@ -60,7 +61,7 @@ az network nsg rule create \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 514 \
-    --access allow \
+    --access Allow
 
 
 ################## IP Publics ##################
