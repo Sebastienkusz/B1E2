@@ -7,6 +7,7 @@ sudo echo "USE nextcloud;" | mysql -h dsi-bdd-sql02.mysql.database.azure.com -u 
 sudo echo "CREATE USER 'sqluser'@'%' IDENTIFIED BY 'password';" | mysql -h dsi-bdd-sql02.mysql.database.azure.com -u nabila -p"password0606!" 
 sudo echo "GRANT ALL PRIVILEGES ON nextcloud.* TO 'sqluser'@'%';" | mysql -h dsi-bdd-sql02.mysql.database.azure.com -u nabila -p"password0606!"
 sudo echo "FLUSH PRIVILEGES;" | mysql -h dsi-bdd-sql02.mysql.database.azure.com -u nabila -p"password0606!"
+sudo echo "SET PERSIST require_secure_transport=OFF;" | mysql -h dsi-bdd-sql02.mysql.database.azure.com -u nabila -p"password0606!"
 
 #Ajout du certificat SSL Azure pour la base de donnees
 #sudo wget --no-check-certificate -O /var/www/html/nextcloud/DigiCertGlobalRootCA.crt.pem https://dl.cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem  
