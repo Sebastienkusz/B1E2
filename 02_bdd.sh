@@ -23,3 +23,10 @@ az mysql flexible-server db create \
     --resource-group $ResourceGroup \
     --server-name $BDDName \
     --database-name nextcloud 
+
+# Unset ssl certificat Mysql
+az mysql flexible-server parameter set \
+    --resource-group $ResourceGroup \
+    --server-name $BDDName \
+    --name "require_secure_transport" \
+    --value "OFF"

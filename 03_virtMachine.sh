@@ -113,7 +113,7 @@ az vm create \
     --public-ip-address $BastionIPName \
     --private-ip-address $BastionVMIPprivate \
     --custom-data user_data/configBastion.sh \
-    --ssh-key-value ssh_keys/auto_rsa.pub
+    --ssh-key-value ssh_keys/$UserKeyName
 
 ################## VM Application ##################
 #Création de la VM Nextcloud
@@ -131,7 +131,7 @@ az vm create \
     --public-ip-address $AppliIPName \
     --private-ip-address $NextcloudVMIPprivate \
     --custom-data user_data/configNextcloudVM.sh \
-    --ssh-key-value ssh_keys/auto_rsa.pub
+    --ssh-key-value ssh_keys/$UserKeyName
 
 #Création d'un disque, avec chiffrement géré par la plateforme Azure
 az disk create \
@@ -140,12 +140,6 @@ az disk create \
     --size-gb 1024 \
     --sku StandardSSD_LRS \
     --encryption-type EncryptionAtRestWithPlatformKey
-
-# az vm run-command invoke \
-#     --resource-group $ResourceGroup \
-#     -n $NextcloudVMName \
-#     --command-id RunShellScript \
-#     --scripts @user_data/configNextcloudVM.sh 
 
 #Attache disque sur la VM
 az vm disk attach \
