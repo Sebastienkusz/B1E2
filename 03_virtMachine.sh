@@ -10,8 +10,8 @@ az network nsg rule create \
     --resource-group $ResourceGroup  \
     --nsg-name $NsgBastionName \
     --name SSHrule \
-    --protocol tcp \
-    --direction inbound \
+    --protocol Tcp \
+    --direction Inbound \
     --priority 1000 \
     --source-address-prefix $NsgBastionRuleIPFilter \
     --source-port-range '*' \
@@ -27,8 +27,8 @@ az network nsg create \
 az network nsg rule create \
     --resource-group $ResourceGroup \
     --nsg-name $NsgAppliName \
-    --name "HTTPrule " \
-    --protocol tcp \
+    --name HTTPrule \
+    --protocol Tcp \
     --direction inbound \
     --priority 1000 \
     --source-address-prefix '*' \
@@ -40,9 +40,9 @@ az network nsg rule create \
 az network nsg rule create \
     --resource-group $ResourceGroup \
     --nsg-name $NsgAppliName \
-    --name "HTTPSrule" \
-    --protocol tcp \
-    --direction inbound \
+    --name HTTPSrule \
+    --protocol Tcp \
+    --direction Inbound \
     --priority 900 \
     --source-address-prefix '*' \
     --source-port-range '*' \
@@ -53,9 +53,9 @@ az network nsg rule create \
 az network nsg rule create \
     --resource-group $ResourceGroup \
     --nsg-name $NsgAppliName \
-    --name "Monitor" \
-    --protocol tcp \
-    --direction inbound \
+    --name Monitor \
+    --protocol Tcp \
+    --direction Inbound \
     --priority 1001 \
     --source-address-prefix '*' \
     --source-port-range '*' \
