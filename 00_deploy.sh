@@ -15,7 +15,7 @@ export NetworkRange="/16"
 
 # Subnet
 export Subnet=$PreName"subnet-nextcloud"
-export SubnetRange="/29"
+export SubnetRange="/26"
 
 # Network Interface Card Variables
 export Nic=$PreName"nic-nextcloud"
@@ -36,14 +36,17 @@ export LabelAppliIPName=$Client$PreName"nextcloud"
 export NsgAppliName=$PreName"nsg-nextcloud"
 export NsgBastionName=$PreName"nsg-bastion"
 
+#Filtering nsg rules
 export NsgBastionRuleIPFilter="82.126.234.200"
 export NsgBastionRuleSshPort="10022"
 
 
-#Noms des ressources
+#Resources names
 export BastionVMName=$PreName"vm-bastion"
 export NextcloudVMName=$PreName"vm-nextcloud"
 export BDDName=$PreName"bdd-sql"
+export BackupBDDName=$PreName"backupbdd-sql"
+export BackupVaultName=$PreName"backupvault"
 export DiskName=$PreName"disk-nextcloud"
 
 export ImageOs="Ubuntu2204"
@@ -58,9 +61,42 @@ export DataDiskNextcloudSize="1024"
 export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
-# Utilisateur
+#Monitoring variables
+export WorkSpaceName="Preproduction-Workspace1-"$ClientName
+export DataCollectionRuleName="Preproduction-DataCollectionRule-"$ClientName
+export DataCollectionRuleAssociationName=$PreName"DataCollectionRuleAssociation-"$ClientName
+export EndPointName=$PreName"EndPoint-"$ClientName
+
+#Default user
 export Username="nabila"
-export UserKeyName="auto_rsa.pub"
+export SshPublicKeyFile=nab_rsa.pub
+
+Help() {
+    echo "This is a Nextcloud deployment script. It can be deployed with no options or with the following options."
+    echo "Execution syntax with no options : ./00_deploy"
+    echo "Execution syntax with options : ./00_deploy [-s -n -l]"
+    echo "-s    VM application size"
+    echo "-n    VM application name"
+    echo "-l    resources location"
+}
+while getopts "hs:n:l:" option; do
+     case "${option}" in
+        h)
+            Help
+            exit;;
+        s)
+            NextcloudVMSize=${OPTARG}
+            ;;
+        n)
+            NextcloudVMName=${OPTARG}
+            ;;
+        l)
+            Location=${OPTARG}
+            ;;
+        \?) echo "Error: Invalid syntax. Use -h for help"
+            exit;;
+    esac
+done
 
 # BDD
 export BDDUrlName=$PreName"bdd-sql"
@@ -73,11 +109,14 @@ export BddName="nextcloud"
 # SQL
  ./02_bdd.sh
 
-# VM
+#VM
 ./03_virtMachine.sh
 
 # Monitoring
-#./04_monitoring.sh
+./04_monitoring.sh
+
+#BackupService
+./05_backup.sh
 
 echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"
 az network public-ip show --resource-group $ResourceGroup --name $AppliIPName --query "{address: ipAddress}"
