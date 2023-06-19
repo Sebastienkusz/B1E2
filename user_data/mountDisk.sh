@@ -43,8 +43,6 @@ echo "UUID=${UUID}    /data   ext4    defaults,nofail    1    2" | sudo tee --ap
 # Refresh the mount points.
 sudo mount -a
 
+#Give writing rights into the managed disk to web app
 sudo chown -R www-data:www-data /data
 
-##Modification du dossier d'écriture des données des utilisateurs Nextcloud
-#A modifier 
-#echo "  'check_data_directory_permissions' => false," >> /var/www/html/nextcloud/config/config.php
