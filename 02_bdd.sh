@@ -60,6 +60,7 @@ else
     echo "SUCCESS : The MySQLserver Nextcloud-database has been deployed."
 fi
 
+
 # Unset ssl certificat Mysql
 az mysql flexible-server parameter set \
     --resource-group $ResourceGroup \

@@ -16,8 +16,8 @@ az network nsg rule create \
     --resource-group $ResourceGroup  \
     --nsg-name $NsgBastionName \
     --name SSHrule \
-    --protocol tcp \
-    --direction inbound \
+    --protocol Tcp \
+    --direction Inbound \
     --priority 1000 \
     --source-address-prefix $NsgBastionRuleIPFilter \
     --source-port-range '*' \
@@ -53,28 +53,29 @@ fi
 az network nsg rule create \
     --resource-group $ResourceGroup \
     --nsg-name $NsgAppliName \
-    --name "HTTPrule " \
+    --name HTTPrule \
+    --protocol Tcp \
     --direction inbound \
     --priority 1000 \
     --source-address-prefix '*' \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 80 \
-    --access allow
+    --access Allow
 
 #HTTPS port rule
 az network nsg rule create \
     --resource-group $ResourceGroup \
     --nsg-name $NsgAppliName \
-    --name "HTTPSrule" \
-    --protocol tcp \
-    --direction inbound \
+    --name HTTPSrule \
+    --protocol Tcp \
+    --direction Inbound \
     --priority 900 \
     --source-address-prefix '*' \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 443 \
-    --access allow
+    --access Allow
 
 #Syslog data forwarding port
 az network nsg rule create \
@@ -87,7 +88,7 @@ az network nsg rule create \
     --source-port-range '*' \
     --destination-address-prefix '*' \
     --destination-port-range 514 \
-    --access allow \
+    --access Allow
 
 #Testing if the deployment was successful
 if [[ $(az resource list --query "[?name == '$NsgAppliName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
@@ -285,21 +286,21 @@ fi
 #Running data base configuration script on Nextcloud VM
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $NextcloudVMName \
+    --name $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/configSQL.sh 
 
 #Running add administrator to Bastion VM
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $BastionVMName \
+    --name $BastionVMName \
     --command-id RunShellScript \
     --scripts @./user_data/addusers.sh
 
 #Running add administrator to Nextcloud VM
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $NextcloudVMName \
+    --name $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @./user_data/addusers.sh
 

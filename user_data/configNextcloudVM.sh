@@ -1,21 +1,29 @@
 #!/bin/bash -x
 
-sudo apt-get -y update 
-sudo apt-get install -y apache2 libapache2-mod-php php-gd php-mysql
-sudo apt-get install -y php-curl php-mbstring php-intl php-gmp php-bcmath php-xml php-imagick php-zip
-sudo wget https://download.nextcloud.com/server/releases/latest.zip
-sudo apt install -y unzip
-sudo unzip -d /var/www/html latestzip
+# Variables
+LabelAppliIPName="esan-preproduction-nextcloud"
+Location="westeurope"
+
+# Fixes
+DNSNextcloud=$LabelAppliIPName"."$Location".cloudapp.azure.com"
+
+# Installation Apache + Nextcloud
+sudo apt -y update
+sudo dpkg -l | grep php | tee packages.txt
+sudo add-apt-repository -y ppa:ondrej/php # Press enter when prompted.
+sudo apt -y update
+sudo apt install -y apache2 libapache2-mod-php
+sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-gd php-curl php-zip php-mbstring php-bcmath
+
+sudo wget -O /tmp/latest.tar.bz2 https://download.nextcloud.com/server/releases/latest.tar.bz2
+
+sudo tar -xjvf /tmp/latest.tar.bz2 -C /var/www/
 sudo chown -R www-data:www-data /var/www/nextcloud
-sudo chown -R www-data:www-data /var/www/nextcloud 
-
-sudo snap install core; sudo snap refresh core
-sudo snap install --classic certbot
-sudo certbot --apache -n --agree-tos -d esan-preproduction-nextcloudn.westeurope.cloudapp.azure.com --register-unsafely-without-email 
-
+sudo su 
+IPPub=$(curl ifconfig.me)
 echo "<VirtualHost *:80>
 DocumentRoot "/var/www/nextcloud"
-ServerName esanNextcloud
+ServerName $IPPub
 <Directory /var/www/nextcloud>
 Require all granted
 AllowOverride All
@@ -24,32 +32,8 @@ Options FollowSymLinks MultiViews
 Dav off
 </IfModule>
 </Directory>
-</VirtualHost>
-<IfModule mod_ssl.c>
-<VirtualHost *:443>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/html/nextcloud/
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-ServerName esan-preproduction-nextcloud02.westeurope.cloudapp.azure.com
-SSLCertificateFile /etc/letsencrypt/live/esan-preproduction-nextcloudn.westeurope.cloudapp.azure.com/fullchain.pem
-SSLCertificateKeyFile /etc/letsencrypt/live/esan-preproduction-nextcloudn.westeurope.cloudapp.azure.com/privkey.pem
-Include /etc/letsencrypt/options-ssl-apache.conf
-</VirtualHost>
-</IfModule>" >> /etc/apache2/sites-available/nextcloud.conf
-
-sudo a2dissite 000-default.conf
-sudo a2dissite 000-default-le-ssl.conf
-sudo a2ensite nextcloud.conf
-sudo systemctl reload apache2
-
-sudo chmod 777 /etc/crontab
-sudo echo "SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
-* 6 * * * root certbot -q renew --apache" >> /etc/crontab
-
-sudo chmod 400 /etc/crontab
-
-
-
+</VirtualHost>" >> /etc/apache2/sites-available/nextcloud.conf
+a2dissite 000-default.conf
+a2ensite nextcloud.conf
+systemctl reload apache2
+exit

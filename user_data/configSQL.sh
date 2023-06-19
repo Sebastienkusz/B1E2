@@ -1,10 +1,22 @@
 #!/bin/bash -x
 
+# Variables
+PreName="preproduction-"
+BDDUrlName=$PreName"bdd-sql"
+AdminSQL="adminsql"
+AdminPassword="dauphinrouge"
+UserSQL="sqluser"
+UserPassword="dauphinvert"
+BddName="nextcloud"
+
+# Commands
 sudo apt -y update
 sudo apt install -y mysql-client
 
-sudo echo "USE nextcloud;" | mysql -h preproduction-bdd-sql01.mysql.database.azure.com -u sqladmin -p"dauphinrouge" 
-sudo echo "CREATE USER 'sqluser'@'%' IDENTIFIED BY 'dauphinvert';" | mysql -h preproduction-bdd-sql01.mysql.database.azure.com -u sqladmin -p"dauphinrouge" 
-sudo echo "GRANT ALL PRIVILEGES ON nextcloud.* TO 'sqluser'@'%';" | mysql -h preproduction-bdd-sql01.mysql.database.azure.com -u sqladmin -p"dauphinrouge"
-sudo echo "FLUSH PRIVILEGES;" | mysql -h preproduction-bdd-sql01.mysql.database.azure.com -u sqladmin -p"dauphinrouge"
+sudo mysql -h $BDDUrlName.mysql.database.azure.com -u $AdminSQL -p"$AdminPassword" <<EOF
+USE $BddName;
+CREATE USER '$UserSQL'@'%' IDENTIFIED BY '$UserPassword';
+GRANT ALL PRIVILEGES ON $BddName.* TO '$UserSQL'@'%';
+FLUSH PRIVILEGES;
+EOF
 
