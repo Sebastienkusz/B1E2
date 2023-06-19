@@ -118,6 +118,8 @@ export BddName="nextcloud"
 #BackupService
 ./05_backup.sh
 
+
+echo "---------------------------------------------------------------------------------------------------------------"
 echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"
 az network public-ip show --resource-group $ResourceGroup --name $AppliIPName --query "{address: ipAddress}"
 

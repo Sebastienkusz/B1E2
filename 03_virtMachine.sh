@@ -335,4 +335,3 @@ az vm run-command invoke \
     -n $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/mountDisk.sh 
-
