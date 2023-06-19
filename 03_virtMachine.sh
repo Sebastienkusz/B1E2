@@ -105,6 +105,9 @@ az vm create \
     --location $Location \
     --size $BastionVMSize \
     --image $ImageOs \
+    --os-disk-name $OSDiskBastion \
+    --os-disk-size-gb $OSDiskBastionSizeGB \
+    --storage-sku $OSDiskBastionSku \
     --public-ip-sku Standard \
     --admin-username $Username \
     --vnet-name $VNet \
@@ -137,7 +140,7 @@ az vm create \
 az disk create \
     --resource-group $ResourceGroup \
     --name $DiskName \
-    --size-gb 1024 \
+    --size-gb $DataDiskNextcloudSize \
     --sku StandardSSD_LRS \
     --encryption-type EncryptionAtRestWithPlatformKey
 
@@ -145,32 +148,32 @@ az disk create \
 az vm disk attach \
     --resource-group $ResourceGroup \
     --vm-name $NextcloudVMName \
-    --name $DiskName \
+    --name $DiskName
 
 #Lancement du montage du disque
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $NextcloudVMName \
+    --name $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/mountDisk.sh 
 
 #Lancement de la configuration de la base de données
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $NextcloudVMName \
+    --name $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/configSQL.sh 
 
 #Ajout des utilisateurs admins à la VM Bastion
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $BastionVMName \
+    --name $BastionVMName \
     --command-id RunShellScript \
     --scripts @./user_data/addusers.sh
 
 #Ajout des utilisateurs admins à la VM Nextcloud
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $NextcloudVMName \
+    --name $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @./user_data/addusers.sh

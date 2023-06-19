@@ -46,9 +46,14 @@ export NextcloudVMName=$PreName"vm-nextcloud"
 export BDDName=$PreName"bdd-sql"
 export DiskName=$PreName"disk-nextcloud"
 
-export ImageOs="UbuntuLTS"
+export ImageOs="Ubuntu2204"
 export BastionVMSize="Standard_B2s"
 export NextcloudVMSize="Standard_D2s_v3"
+export OSDiskBastion=$PreName"OSDisk-Bastion"
+export OSDiskBastionSizeGB="30"
+export OSDiskBastionSku="Standard_LRS"
+
+export DataDiskNextcloudSize="1024"
 
 export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
@@ -59,12 +64,12 @@ export UserKeyName="auto_rsa.pub"
 
 
 # Network deployment
-./01_network.sh
+ ./01_network.sh
 
 # SQL
-./02_bdd.sh
+ ./02_bdd.sh
 
-VM
+# VM
 ./03_virtMachine.sh
 
 # Monitoring
