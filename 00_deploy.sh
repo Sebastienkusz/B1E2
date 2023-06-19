@@ -2,7 +2,7 @@
 
 # Variables
 # Resource Group
-export ResourceGroup="b1e2-gr1"
+export ResourceGroup="Nabila_R"
 export Location="westeurope"
 export Zone="3"
 export PreName="preproduction-"
@@ -62,10 +62,10 @@ export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
 #Monitoring variables
-export WorkSpaceName="Preproduction-Workspace1-"$ClientName
-export DataCollectionRuleName="Preproduction-DataCollectionRule-"$ClientName
-export DataCollectionRuleAssociationName=$PreName"DataCollectionRuleAssociation-"$ClientName
-export EndPointName=$PreName"EndPoint-"$ClientName
+export WorkSpaceName=$Client$PreName"workspace"
+export DataCollectionRuleName=$Client$PreName"datacollectionrule"
+export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
+export EndPointName=$Client$PreName"endpoint"
 
 #Default user
 export Username="nabila"
