@@ -24,6 +24,7 @@ IPPub=$(curl ifconfig.me)
 echo "<VirtualHost *:80>
 DocumentRoot "/var/www/nextcloud"
 ServerName $IPPub
+ServerAlias $DNSNextcloud
 <Directory /var/www/nextcloud>
 Require all granted
 AllowOverride All
