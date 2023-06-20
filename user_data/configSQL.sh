@@ -2,7 +2,7 @@
 
 # Variables
 PreName="preproduction-"
-BDDUrlName=$PreName"bdd-sql"
+BDDUrlName=$PreName"bdd-sqln"
 AdminSQL="adminsql"
 AdminPassword="dauphinrouge"
 UserSQL="sqluser"

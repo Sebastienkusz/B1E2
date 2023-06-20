@@ -30,7 +30,8 @@ then
     echo "ERROR : The MySQLserver deployment failed. Starting rollback process."
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./02_bdd.sh | grep -v grep | awk '{print $2}' | xargs kill
 else
     echo "SUCCESS : The MySQLserver has been deployed."
 fi
