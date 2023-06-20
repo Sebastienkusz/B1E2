@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Create log-analytics workspace, with 1 year log retention
-if [[ $(az resource list --query "[?name == '$WorkSpaceName' && resourceGroup == '$ResourceGroup']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$WorkSpaceName']" -o tsv) != "" ]] 
 then
     echo "The Log Monitoring Workspace already exists."
 else
@@ -13,7 +13,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$WorkSpaceName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$WorkSpaceName']" -o tsv) == "" ]]  
 then
     echo "ERROR : The Log Monitoring Workspace deployment failed. Starting rollback process." 
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
@@ -26,6 +26,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Log Monitoring Workspace has been deployed."
@@ -49,7 +50,7 @@ az vm identity assign \
 
 
 #Creating Data rule collection (DCR) based on json file. This rule will send performance data, windows events and syslog to the loganalytic workspace
-if [[ $(az resource list --query "[?name == '$DataCollectionRuleName' && resourceGroup == '$ResourceGroup' && location == '$Location']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DataCollectionRuleName']" -o tsv) != "" ]] 
 then
     echo "The Data Collection Rule already exists."
 else
@@ -62,7 +63,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$DataCollectionRuleName' && resourceGroup == '$ResourceGroup' && location == '$Location']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DataCollectionRuleName']" -o tsv) == "" ]] 
 then
     echo "ERROR : The Data Collection Rule deployment failed. Starting rollback process." 
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
@@ -76,6 +77,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Data Collection Rule has been deployed."
@@ -98,7 +100,7 @@ az monitor data-collection rule association create \
 
 
 #Creation of an endpoint to allow communication between the agent on VMs and the Azure Monitoring platform
-if [[ $(az resource list --query "[?name == '$EndPointName' && resourceGroup == '$ResourceGroup' && location == '$Location']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$EndPointName']" -o tsv) != "" ]] 
 then
     echo "The Data Collection Endpoint already exists."
 else
@@ -111,7 +113,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$EndPointName' && resourceGroup == '$ResourceGroup' && location == '$Location']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$EndPointName']" -o tsv) == "" ]]  
 then
   echo "ERROR : The Data Collection Endpoint deployment failed. Starting rollback process." 
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
@@ -126,6 +128,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Data Collection Endpoint has been deployed."
