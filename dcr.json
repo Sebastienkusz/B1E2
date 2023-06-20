@@ -86,7 +86,7 @@
       "destinations": {
         "logAnalytics": [
           {
-            "workspaceResourceId": "/subscriptions/c56aea2c-50de-4adc-9673-6a8008892c21/resourceGroups/Nabila_R/providers/Microsoft.OperationalInsights/workspaces/Preproduction-Workspace1-esan",
+            "workspaceResourceId": "/subscriptions/c56aea2c-50de-4adc-9673-6a8008892c21/resourceGroups/Nabila_R/providers/Microsoft.OperationalInsights/workspaces/esan-preproduction-workspacenab",
             "name": "centralWorkspace"
           }
         ]

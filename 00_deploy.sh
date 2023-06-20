@@ -2,7 +2,7 @@
 
 # Variables
 # Resource Group
-export ResourceGroup="b1e2-gr1"
+export ResourceGroup="Nabila_R"
 export Location="westeurope"
 export Zone="3"
 export PreName="preproduction-"
@@ -27,10 +27,10 @@ export BastionIPName=$PreName"ip-bastion"
 export AppliIPName=$PreName"ip-nextcloud"
 
 # Label Public IP VM Bastion Variables
-export LabelBastionIPName=$Client$PreName"bastion"
+export LabelBastionIPName=$Client$PreName"bastion1"
 
 # Label Public IP VM Application Variables
-export LabelAppliIPName=$Client$PreName"nextcloud"
+export LabelAppliIPName=$Client$PreName"nextcloud1"
 
 #Noms des NSG
 export NsgAppliName=$PreName"nsg-nextcloud"
@@ -44,7 +44,7 @@ export NsgBastionRuleSshPort="10022"
 #Resources names
 export BastionVMName=$PreName"vm-bastion"
 export NextcloudVMName=$PreName"vm-nextcloud"
-export BDDName=$PreName"bdd-sql"
+export BDDName=$PreName"bdd-sqln"
 export BackupBDDName=$PreName"backupbdd-sql"
 export BackupVaultName=$PreName"backupvault"
 export DiskName=$PreName"disk-nextcloud"
@@ -62,14 +62,17 @@ export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
 #Monitoring variables
-export WorkSpaceName="Preproduction-Workspace1-"$ClientName
-export DataCollectionRuleName="Preproduction-DataCollectionRule-"$ClientName
-export DataCollectionRuleAssociationName=$PreName"DataCollectionRuleAssociation-"$ClientName
-export EndPointName=$PreName"EndPoint-"$ClientName
+export WorkSpaceName=$Client$PreName"workspacenab"
+export DataCollectionRuleName=$Client$PreName"datacollectionrule"
+export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
+export EndPointName=$Client$PreName"endpoint"
 
 #Default user
 export Username="nabila"
-export SshPublicKeyFile=nab_rsa.pub
+export SshPublicKeyFile="nab_rsa.pub"
+
+export killProcess=0
+
 
 Help() {
     echo "This is a Nextcloud deployment script. It can be deployed with no options or with the following options."
@@ -104,20 +107,44 @@ export BddName="nextcloud"
 
 
 # Network deployment
- ./01_network.sh
+./01_network.sh 
+
+killProcess=$?
+if [ $killProcess -eq 1 ]; then
+    exit
+fi
 
 # SQL
- ./02_bdd.sh
+./02_bdd.sh
+
+killProcess=$?
+if [ $killProcess -eq 1 ]; then
+    exit
+fi
 
 #VM
 ./03_virtMachine.sh
 
+killProcess=$?
+if [ $killProcess -eq 1 ]; then
+    exit
+fi
+
 # Monitoring
 ./04_monitoring.sh
 
-#BackupService
-./05_backup.sh
+killProcess=$?
+if [ $killProcess -eq 1 ]; then
+    exit
+fi
 
+#BackupService
+# ./05_backup.sh
+
+killProcess=$?
+if [ $killProcess -eq 1 ]; then
+    exit
+fi
 
 echo "---------------------------------------------------------------------------------------------------------------"
 echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"

@@ -26,8 +26,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
-    ps -ef | grep ./04_monitoring.sh | grep -v grep | awk '{print $2}' | xargs kill
+    exit 1
 else
     echo "SUCCESS : The Log Monitoring Workspace has been deployed."
 fi
@@ -68,7 +67,7 @@ then
     echo "ERROR : The Data Collection Rule deployment failed. Starting rollback process." 
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
     az vm delete -g $ResourceGroup -n $BastionVMName --yes
-    az monitor data-collection rule delete -g $ResourceGroup -n $DataCollectionRuleName
+    az monitor data-collection rule delete -g $ResourceGroup -n $DataCollectionRuleName --yes
     az monitor log-analytics workspace delete -g $ResourceGroup -n $WorkSpaceName --yes
     az disk delete -g $ResourceGroup -n $DiskName --yes
     az network public-ip delete -g $ResourceGroup -n $AppliIPName
@@ -77,8 +76,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
-    ps -ef | grep ./04_monitoring.sh | grep -v grep | awk '{print $2}' | xargs kill
+    exit 1
 else
     echo "SUCCESS : The Data Collection Rule has been deployed."
 fi
@@ -128,8 +126,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
-    ps -ef | grep ./04_monitoring.sh | grep -v grep | awk '{print $2}' | xargs kill
+    exit 1
 else
     echo "SUCCESS : The Data Collection Endpoint has been deployed."
 fi
@@ -170,38 +167,40 @@ az vm run-command invoke \
 
 
 
-
+####The code below can be used to deploy the OMS agent on Linux VMs. OMS agent will be deprecated by August 2024, but seems more stable than the AMA agent for now.
+####To use it, you will need to downgrade to UbuntuLTS (change variable in 00_deplot.sh) and downgrade the Nextcloud version to 14, with PHP 7 in the configNextcloudVM file.
 
 #Fetch workspace id and key -- will be used to install the agent on VMs
-# myWorkspaceId=$(az monitor log-analytics workspace show --resource-group Nabila_R --workspace-name MyWorkspace08 --query customerId -o tsv)
-# myWorkspaceKey=$(az monitor log-analytics workspace get-shared-keys --resource-group Nabila_R --workspace-name MyWorkspace08 --query primarySharedKey -o tsv)
-#Add OMSextension to Bastion VM
-# az vm extension set \
-#   --resource-group Nabila_R \
-#   --name OmsAgentForLinux \
-#   --publisher Microsoft.EnterpriseCloud.Monitoring \
-#   --vm-name Preproduction-Vm-Nextcloud \
-#   --enable-auto-upgrade true
+# myWorkspaceId=$(az monitor log-analytics workspace show --resource-group $ResourceGroup --workspace-name $WorkSpaceName --query customerId -o tsv)
+# myWorkspaceKey=$(az monitor log-analytics workspace get-shared-keys --resource-group $ResourceGroup --workspace-name $WorkSpaceName --query primarySharedKey -o tsv)
 
 #Add OMSextension to Nextcloud VM
 # az vm extension set \
-#   --resource-group Nabila_R \
+#   --resource-group $ResourceGroup \
 #   --name OmsAgentForLinux \
-#   --publisher Microsoft.EnterpriseCloud.Monitoring\
-#   --vm-name Preproduction-Vm-Bastion \
+#   --publisher Microsoft.EnterpriseCloud.Monitoring \
+#   --vm-name $NextcloudVMName \
 #   --enable-auto-upgrade true
 
-#Agent activation on Bastion VM
-# az vm run-command invoke \
-#     --resource-group Nabila_R \
-#     -n Preproduction-Vm-Nextcloud  \
-#     --command-id RunShellScript \
-#     --scripts "sudo wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w $myWorkspaceId -s $myWorkspaceKey -d opinsights.azure.com"
+#Add OMSextension to Bastion VM
+# az vm extension set \
+#   --resource-group $ResourceGroup \
+#   --name OmsAgentForLinux \
+#   --publisher Microsoft.EnterpriseCloud.Monitoring\
+#   --vm-name $BastionVMName \
+#   --enable-auto-upgrade true
 
 #Agent activation on Nextcloud VM
 # az vm run-command invoke \
-#     --resource-group Nabila_R \
-#     -n Preproduction-Vm-Bastion \
+#     --resource-group $ResourceGroup \
+#     -n $NextcloudVMName  \
+#     --command-id RunShellScript \
+#     --scripts "sudo wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w $myWorkspaceId -s $myWorkspaceKey -d opinsights.azure.com"
+
+#Agent activation on Bastion VM
+# az vm run-command invoke \
+#     --resource-group $ResourceGroup \
+#     -n $BastionVMName \
 #     --command-id RunShellScript \
 #     --scripts "sudo wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh && sh onboard_agent.sh -w $myWorkspaceId -s $myWorkspaceKey -d opinsights.azure.com"
 

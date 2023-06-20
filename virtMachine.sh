@@ -25,19 +25,6 @@ az network nsg rule create \
     --destination-port-range $NsgBastionRuleSshPort \
     --access allow
 
-#Syslog data forwarding port
-az network nsg rule create \
-    --resource-group $ResourceGroup \
-    --nsg-name $NsgBastionName \
-    --name "Monitor" \
-    --direction inbound \
-    --priority 1001 \
-    --source-address-prefix '*' \
-    --source-port-range '*' \
-    --destination-address-prefix '*' \
-    --destination-port-range 514 \
-    --access Allow
-
 #Testing if the deployment was successful
 if [[ $(az resource list --query "[?name == '$NsgBastionName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
 then
@@ -45,7 +32,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill 
 else
     echo "SUCCESS : The Bastion NSG has been deployed."
 fi
@@ -110,7 +98,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1 
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill 
 else
     echo "SUCCESS : The Nextcloud NSG has been deployed."
 fi
@@ -131,7 +120,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == 'abc' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list --query "[?name == '$BastionIPName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
 then
     echo "ERROR : The Bastion VM public IP deployment failed. Starting rollback process."
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
@@ -139,7 +128,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill 
 else
     echo "SUCCESS : The Bastion VM public IP has been deployed."
 fi
@@ -171,7 +161,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill 
 else
     echo "SUCCESS : The Nextcloud VM public IP has been deployed."
 fi
@@ -218,7 +209,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$BastionVMName' && resourceGroup == '$ResourceGroup' && location == '$Location']") == '[]' ]] 
+if [[ $(az resource list --query "[?name == 'abc' && resourceGroup == '$ResourceGroup' && location == '$Location']") == '[]' ]] 
 then
     echo "ERROR : The Bastion VM deployment failed. Starting rollback process."
     az vm delete -g $ResourceGroup -n $BastionVMName --yes
@@ -228,7 +219,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1  
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill   
 else
     echo "SUCCESS : The Bastion VM has been deployed."
 fi
@@ -271,7 +263,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill 
 else
     echo "SUCCESS : The Nextcloud VM has been deployed."
 fi
@@ -324,7 +317,8 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    exit 1
+    ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+    ps -ef | grep ./03_virtMachine.sh | grep -v grep | awk '{print $2}' | xargs kill 
 else
     echo "SUCCESS : The Managed Disk has been deployed."
 fi
@@ -341,3 +335,4 @@ az vm run-command invoke \
     -n $NextcloudVMName \
     --command-id RunShellScript \
     --scripts @user_data/mountDisk.sh 
+

@@ -19,11 +19,14 @@ if [[ $(az resource list --query "[?name == '$VNet' && resourceGroup == '$Resour
 then
   echo "ERROR : The network deployment failed. Starting rollback process."
   az network vnet delete -g $ResourceGroup -n $VNet
-  exit 1
+  ps -ef | grep ./00_deploy.sh | grep -v grep | awk '{print $2}' | xargs kill
+  ps -ef | grep ./01_network.sh | grep -v grep | awk '{print $2}' | xargs kill
 else 
   echo "SUCCESS : The network has been deployed"
 fi
 
+
+ps -ef | grep ./01_network.sh | grep -v grep | awk '{print $2}' | xargs kill
 
 # Network Interface Card Creation
 # az network nic create \
