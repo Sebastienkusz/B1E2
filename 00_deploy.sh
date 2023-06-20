@@ -2,7 +2,7 @@
 
 # Variables
 # Resource Group
-export ResourceGroup="Nabila_R"
+export ResourceGroup="b1e2-gr1"
 export Location="westeurope"
 export Zone="3"
 export PreName="preproduction-"
@@ -27,10 +27,10 @@ export BastionIPName=$PreName"ip-bastion"
 export AppliIPName=$PreName"ip-nextcloud"
 
 # Public label IP VM Bastion Variables
-export LabelBastionIPName=$Client$PreName"bastionnab"
+export LabelBastionIPName=$Client$PreName"bastion"
 
 # Public label IP VM Application Variables
-export LabelAppliIPName=$Client$PreName"nextcloudnab"
+export LabelAppliIPName=$Client$PreName"nextcloud"
 
 #Noms des NSG
 export NsgAppliName=$PreName"nsg-nextcloud"
@@ -44,7 +44,7 @@ export NsgBastionRuleSshPort="10022"
 #Resources names
 export BastionVMName=$PreName"vm-bastion"
 export NextcloudVMName=$PreName"vm-nextcloud"
-export BDDName=$PreName"bdd-sqlnab"
+export BDDName=$PreName"bdd-sql"
 export BackupBDDName=$PreName"backupbdd-sql"
 export BackupVaultName=$PreName"backupvault"
 export DiskName=$PreName"disk-nextcloud"
@@ -62,7 +62,7 @@ export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
 #Monitoring variables
-export WorkSpaceName=$Client$PreName"workspacenab"
+export WorkSpaceName=$Client$PreName"workspace"
 export DataCollectionRuleName=$Client$PreName"datacollectionrule"
 export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
 export EndPointName=$Client$PreName"endpoint"
@@ -71,9 +71,10 @@ export EndPointName=$Client$PreName"endpoint"
 export Username="nabila"
 export SshPublicKeyFile="nab_rsa.pub"
 
+#Variable used to evaluate the error status during the script execution
 export killProcess=0
 
-
+#
 Help() {
     echo "This is a Nextcloud deployment script. It can be deployed with no options or with the following options."
     echo "Execution syntax with no options : ./00_deploy"
@@ -115,7 +116,7 @@ if [ $killProcess -eq 1 ]; then
 fi
 
 # SQL
-#./02_bdd.sh
+./02_bdd.sh
 
 killProcess=$?
 if [ $killProcess -eq 1 ]; then
@@ -139,7 +140,7 @@ if [ $killProcess -eq 1 ]; then
 fi
 
 #BackupService
-# ./05_backup.sh
+./05_backup.sh
 
 killProcess=$?
 if [ $killProcess -eq 1 ]; then
