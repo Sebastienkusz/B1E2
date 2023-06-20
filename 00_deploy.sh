@@ -101,6 +101,10 @@ while getopts "hs:n:l:" option; do
     esac
 done
 
+# BDD
+export BDDUrlName=$PreName"bdd-sql"
+export BddName="nextcloud"
+
 
 # Network deployment
 ./01_network.sh 
@@ -141,6 +145,37 @@ killProcess=$?
 if [ $killProcess -eq 1 ]; then
     exit
 fi
+
+echo "---------------------------------------------------------------------------------------------------------------"
+echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"
+az network public-ip show --resource-group $ResourceGroup --name $AppliIPName --query "{address: ipAddress}"
+
+echo "créer le compte administrateur de nextcloud avant de continuer"
+
+echo "Voir les informations sur le Readme"
+
+echo "nom de la bdd : " $BddName
+echo "adresse du serveur : " $BDDUrlName.mysql.database.azure.com
+
+echo "Taper le mot entre crochet pour continuer [Nextcloud]"
+read mot
+while
+[ "$mot" = "Nextcloud" ]
+do
+echo "Taper le mot entre crochet pour continuer [Nextcloud]"
+read mot
+done
+
+#Ajout des utilisateurs admins à la VM Nextcloud
+az vm run-command invoke \
+    --resource-group $ResourceGroup \
+    --name $NextcloudVMName \
+    --command-id RunShellScript \
+    --scripts @./user_data/Post_install.sh
+
+
+az vm run-command invoke --resource-group b1e2-gr1 --name preproduction-vm-nextcloud --command-id RunShellScript --scripts @./user_data/Post_install.sh
+
 
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
