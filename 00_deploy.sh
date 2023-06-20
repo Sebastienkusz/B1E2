@@ -2,7 +2,7 @@
 
 # Variables
 # Resource Group
-export ResourceGroup="b1e2-gr1"
+export ResourceGroup="Nabila_R"
 export Location="westeurope"
 export Zone="3"
 export PreName="preproduction-"
@@ -26,11 +26,11 @@ export BastionIPName=$PreName"ip-bastion"
 # Public IP VM Application Variables
 export AppliIPName=$PreName"ip-nextcloud"
 
-# Label Public IP VM Bastion Variables
-export LabelBastionIPName=$Client$PreName"bastion"
+# Public label IP VM Bastion Variables
+export LabelBastionIPName=$Client$PreName"bastionnab"
 
-# Label Public IP VM Application Variables
-export LabelAppliIPName=$Client$PreName"nextcloud"
+# Public label IP VM Application Variables
+export LabelAppliIPName=$Client$PreName"nextcloudnab"
 
 #Noms des NSG
 export NsgAppliName=$PreName"nsg-nextcloud"
@@ -44,7 +44,7 @@ export NsgBastionRuleSshPort="10022"
 #Resources names
 export BastionVMName=$PreName"vm-bastion"
 export NextcloudVMName=$PreName"vm-nextcloud"
-export BDDName=$PreName"bdd-sql"
+export BDDName=$PreName"bdd-sqlnab"
 export BackupBDDName=$PreName"backupbdd-sql"
 export BackupVaultName=$PreName"backupvault"
 export DiskName=$PreName"disk-nextcloud"
@@ -62,7 +62,7 @@ export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
 #Monitoring variables
-export WorkSpaceName=$Client$PreName"workspace"
+export WorkSpaceName=$Client$PreName"workspacenab"
 export DataCollectionRuleName=$Client$PreName"datacollectionrule"
 export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
 export EndPointName=$Client$PreName"endpoint"

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Update Network for Mysql service
-# az network vnet subnet update \
-#     --resource-group $ResourceGroup \
-#     --name $Subnet \
-#     --vnet-name $VNet \
-#     --delegations Microsoft.Sql/managedInstances
-
 # Creating Mysql flexible server
 if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BDDName']" -o tsv) != "" ]] 
 then
