@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Virtual Network and subnet Creation
-if [[ $(az resource list --query "[?name == '$VNet' && resourceGroup == '$ResourceGroup']") != '[]' ]]
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$VNet']" -o tsv) != "" ]]
 then
   echo "The network already exists"
 else
@@ -15,7 +15,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$VNet' && resourceGroup == '$ResourceGroup']") == '[]' ]];
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$VNet']" -o tsv) != "" ]]
 then
   echo "ERROR : The network deployment failed. Starting rollback process."
   az network vnet delete -g $ResourceGroup -n $VNet
