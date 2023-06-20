@@ -25,6 +25,19 @@ az network nsg rule create \
     --destination-port-range $NsgBastionRuleSshPort \
     --access allow
 
+#Syslog data forwarding port
+az network nsg rule create \
+    --resource-group $ResourceGroup \
+    --nsg-name $NsgBastionName \
+    --name "Monitor" \
+    --direction inbound \
+    --priority 1001 \
+    --source-address-prefix '*' \
+    --source-port-range '*' \
+    --destination-address-prefix '*' \
+    --destination-port-range 514 \
+    --access Allow
+
 #Testing if the deployment was successful
 if [[ $(az resource list --query "[?name == '$NsgBastionName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
 then

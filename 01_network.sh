@@ -1,5 +1,5 @@
 #!/bin/bash
-echo $($(az resource list --query "[?name == '$VNet' && resourceGroup == '$ResourceGroup']") != '[]')
+
 # Virtual Network and subnet Creation
 if [[ $(az resource list --query "[?name == '$VNet' && resourceGroup == '$ResourceGroup']") != '[]' ]]
 then
