@@ -26,10 +26,10 @@ export BastionIPName=$PreName"ip-bastion"
 # Public IP VM Application Variables
 export AppliIPName=$PreName"ip-nextcloud"
 
-# Label Public IP VM Bastion Variables
+# Public label IP VM Bastion Variables
 export LabelBastionIPName=$Client$PreName"bastion"
 
-# Label Public IP VM Application Variables
+# Public label IP VM Application Variables
 export LabelAppliIPName=$Client$PreName"nextcloud"
 
 #Noms des NSG
@@ -71,9 +71,10 @@ export EndPointName=$Client$PreName"endpoint"
 export Username="nabila"
 export SshPublicKeyFile="nab_rsa.pub"
 
+#Variable used to evaluate the error status during the script execution
 export killProcess=0
 
-
+#
 Help() {
     echo "This is a Nextcloud deployment script. It can be deployed with no options or with the following options."
     echo "Execution syntax with no options : ./00_deploy"
@@ -115,7 +116,7 @@ if [ $killProcess -eq 1 ]; then
 fi
 
 # SQL
-#./02_bdd.sh
+./02_bdd.sh
 
 killProcess=$?
 if [ $killProcess -eq 1 ]; then
@@ -139,7 +140,7 @@ if [ $killProcess -eq 1 ]; then
 fi
 
 #BackupService
-# ./05_backup.sh
+./05_backup.sh
 
 killProcess=$?
 if [ $killProcess -eq 1 ]; then
