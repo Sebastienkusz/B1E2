@@ -8,7 +8,7 @@
 #     --delegations Microsoft.Sql/managedInstances
 
 # Creating Mysql flexible server
-if [[ $(az resource list --query "[?name == '$BDDName' && resourceGroup == '$ResourceGroup']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BDDName']" -o tsv) != "" ]] 
 then
     echo "The MySQLserver already exists."
 else
@@ -25,11 +25,12 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$BDDName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BDDName']" -o tsv) == "" ]] 
 then
     echo "ERROR : The MySQLserver deployment failed. Starting rollback process."
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The MySQLserver has been deployed."

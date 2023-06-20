@@ -2,7 +2,7 @@
 
 ################## NSG ##################
 # nsg Bastion VM deployment
-if [[ $(az resource list --query "[?name == '$NsgBastionName' && resourceGroup == '$ResourceGroup']") != '[]' ]]
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NsgBastionName']" -o tsv) != "" ]] 
 then
     echo "The Bastion NSG already exists."
 else
@@ -39,19 +39,20 @@ az network nsg rule create \
     --access Allow
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$NsgBastionName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NsgBastionName']" -o tsv) == "" ]]  
 then
     echo "ERROR : The Bastion NSG deployment failed. Starting rollback process."
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Bastion NSG has been deployed."
 fi
 
 # nsg Vm Nextcloud
-if [[ $(az resource list --query "[?name == '$NsgAppliName' && resourceGroup == '$ResourceGroup']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NsgAppliName']" -o tsv) != "" ]]  
 then
     echo "The Nextcloud NSG already exists."
 else
@@ -103,13 +104,14 @@ az network nsg rule create \
     --access Allow
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$NsgAppliName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NsgAppliName']" -o tsv) == "" ]] 
 then
     echo "ERROR : The Bastion NSG deployment failed. Starting rollback process."
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1 
 else
     echo "SUCCESS : The Nextcloud NSG has been deployed."
@@ -117,7 +119,7 @@ fi
 
 ################## IP Publics ##################
 # Public IP VM Bastion Creation
-if [[ $(az resource list --query "[?name == '$BastionIPName' && resourceGroup == '$ResourceGroup']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BastionIPName']" -o tsv) != "" ]] 
 then
     echo "The Bastion VM public IP already exists."
 else
@@ -131,7 +133,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == 'abc' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BastionIPName']" -o tsv) == "" ]] 
 then
     echo "ERROR : The Bastion VM public IP deployment failed. Starting rollback process."
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
@@ -139,6 +141,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Bastion VM public IP has been deployed."
@@ -146,7 +149,7 @@ fi
 
 
 # Public IP VM Application Creation
-if [[ $(az resource list --query "[?name == '$AppliIPName' && resourceGroup == '$ResourceGroup']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$AppliIPName']" -o tsv) != "" ]] 
 then
     echo "The Nextcloud VM public IP already exists."
 else
@@ -160,7 +163,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$AppliIPName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$AppliIPName']" -o tsv) == "" ]] 
 then
     echo "ERROR : The Nextcloud VM public IP deployment failed. Starting rollback process."
     az network nic delete -g $ResourceGroup -n $NextcloudVMName"Nic" --force-deletion
@@ -171,6 +174,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Nextcloud VM public IP has been deployed."
@@ -193,7 +197,7 @@ az network public-ip update \
 ################# VM Bastion ##################
 
 #Creating Bastion VM 
-if [[ $(az resource list --query "[?name == '$BastionVMName' && resourceGroup == '$ResourceGroup' && location == '$Location']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BastionVMName']" -o tsv) != "" ]]
 then
     echo "The Bastion VM already exists."
 else
@@ -218,7 +222,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$BastionVMName' && resourceGroup == '$ResourceGroup' && location == '$Location']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BastionVMName']" -o tsv) == "" ]]
 then
     echo "ERROR : The Bastion VM deployment failed. Starting rollback process."
     az vm delete -g $ResourceGroup -n $BastionVMName --yes
@@ -228,6 +232,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1  
 else
     echo "SUCCESS : The Bastion VM has been deployed."
@@ -235,7 +240,7 @@ fi
 
 ################## VM Application ##################
 #Creating Nextcloud VM
-if [[ $(az resource list --query "[?name == '$NextcloudVMName' && resourceGroup == '$ResourceGroup' && location == '$Location']") != '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NextcloudVMName']" -o tsv) != "" ]] 
 then
     echo "The Nextcloud VM already exists."
 else
@@ -260,7 +265,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$NextcloudVMName' && resourceGroup == '$ResourceGroup' && location == '$Location']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NextcloudVMName']" -o tsv) == "" ]] 
 then
     echo "ERROR : The Nextcloud VM deployment failed. Starting rollback process."
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
@@ -271,13 +276,14 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Nextcloud VM has been deployed."
 fi
 
-#Créeating encrypted managed disk. The encryption is handled by the Azure platform
-if [[ $(az resource list --query "[?name == '$DiskName' && resourceGroup == '$ResourceGroup']") != '[]' ]] 
+#Creating encrypted managed disk. The encryption is handled by the Azure platform
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DiskName']" -o tsv) != "" ]]  
 then
     echo "The Managed Disk already exists."
 else
@@ -312,7 +318,7 @@ az vm run-command invoke \
     --scripts @./user_data/addusers.sh
 
 #Testing if the deployment was successful
-if [[ $(az resource list --query "[?name == '$DiskName' && resourceGroup == '$ResourceGroup']") == '[]' ]] 
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DiskName']" -o tsv) == "" ]]  
 then
     echo "ERROR : The Managed Disk deployment failed. Starting rollback process."
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
@@ -324,6 +330,7 @@ then
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Managed Disk has been deployed."

@@ -2,7 +2,7 @@
 
 # Variables
 # Resource Group
-export ResourceGroup="Nabila_R"
+export ResourceGroup="b1e2-gr1"
 export Location="westeurope"
 export Zone="3"
 export PreName="preproduction-"
@@ -27,10 +27,10 @@ export BastionIPName=$PreName"ip-bastion"
 export AppliIPName=$PreName"ip-nextcloud"
 
 # Label Public IP VM Bastion Variables
-export LabelBastionIPName=$Client$PreName"bastion1"
+export LabelBastionIPName=$Client$PreName"bastion"
 
 # Label Public IP VM Application Variables
-export LabelAppliIPName=$Client$PreName"nextcloud1"
+export LabelAppliIPName=$Client$PreName"nextcloud"
 
 #Noms des NSG
 export NsgAppliName=$PreName"nsg-nextcloud"
@@ -44,7 +44,7 @@ export NsgBastionRuleSshPort="10022"
 #Resources names
 export BastionVMName=$PreName"vm-bastion"
 export NextcloudVMName=$PreName"vm-nextcloud"
-export BDDName=$PreName"bdd-sqln"
+export BDDName=$PreName"bdd-sql"
 export BackupBDDName=$PreName"backupbdd-sql"
 export BackupVaultName=$PreName"backupvault"
 export DiskName=$PreName"disk-nextcloud"
@@ -62,7 +62,7 @@ export BastionVMIPprivate="11.0.0.5"
 export NextcloudVMIPprivate="11.0.0.6"
 
 #Monitoring variables
-export WorkSpaceName=$Client$PreName"workspacenab"
+export WorkSpaceName=$Client$PreName"workspace"
 export DataCollectionRuleName=$Client$PreName"datacollectionrule"
 export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
 export EndPointName=$Client$PreName"endpoint"
@@ -115,7 +115,7 @@ if [ $killProcess -eq 1 ]; then
 fi
 
 # SQL
-./02_bdd.sh
+#./02_bdd.sh
 
 killProcess=$?
 if [ $killProcess -eq 1 ]; then
@@ -174,7 +174,7 @@ az vm run-command invoke \
     --scripts @./user_data/Post_install.sh
 
 
-az vm run-command invoke --resource-group b1e2-gr1 --name preproduction-vm-nextcloud --command-id RunShellScript --scripts @./user_data/Post_install.sh
+az vm run-command invoke --resource-group $ResourceGroup --name $NextcloudVMName --command-id RunShellScript --scripts @./user_data/Post_install.sh
 
 
 echo "---------------------------------------------------------------------------------------------------------------"
