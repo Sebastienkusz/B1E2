@@ -75,8 +75,8 @@ La quasi-totalité des variables peuvent être modifiées via le fichier `00_dep
 
 Voici les variables pour lesquelles il faut être attentif :
 
-- La modification des variables $PreName et $ClientName a un impact sur les noms DNS dans les fichiers `user_data/configNextcloudVm.sh` et `/user_data/configSQL.sh`. Il faut mettre à jour les lignes 17, 38 et 44 sur le premier fichier, puis la ligne 5 dans le second fichier.
-- La modification des noms DNS dans le fichier `00_deploy.sh` (lignes 30 et 33) nécessite aussi la modification du fichier `user_data/configNextcloudVm.sh` (lignes 17, 38 et 44)
+- La modification des variables $PreName et $ClientName a un impact sur les noms DNS dans les fichiers `user_data/configNextcloudVm.sh` et `/user_data/configSQL.sh`. Il faut mettre à jour les lignes 4 et 30 sur le premier fichier, puis la ligne 4 et 5 dans le second fichier.
+- La modification des noms DNS dans le fichier `00_deploy.sh` (lignes 30 et 33) nécessite aussi la modification du fichier `user_data/configNextcloudVm.sh` (lignes 4 et 30).
 - La modification de l'adminSQL et/ou du passwordadmin SQL sur le fichier `02_bdd.sh`.Il faut également reporter les changements sur le fichier `/user_data/configSQL.sh`
 - La modification du user par défaut et de sa clé publique associée dans le fichier `00_deploy.sh` (lignes 71 et 72). Il faut également mettre à jour les informations du fichier `user_data/adduser.sh` (ligne 5)
 - La modification du nom du Workspace, du groupe de ressource ou du nom du client. Il faut également modifier la ligne 89, du fichier dcr.json, pour la faire correspondre avec le nouveau `workspaceName`, `resourceGroupName` et `subscriptionID`.
