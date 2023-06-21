@@ -43,7 +43,7 @@ L’application Nextcloud est accessible via le lien :
 
 https://enas-preproduction-nextcloud.westeurope.cloudapp.azure.com/
 
-Les champs du formulaire de création du compte d'administrateur sont normalement pré-remplis (il ne vous reste qu'à choisir un nom d'utilisateur admin et son mot de passe).
+La configuration du compte administrateur Nextcloud est automatisée. Il ne vous reste plus qu'à vous connecter avec l'identifiant et le mot de passe définit dans le fichier `user_data/configNextcloudVm.sh` (lignes 8 et 9).
 
 Si ce n'est pas le cas, il faudra préciser les informations suivantes :
 
