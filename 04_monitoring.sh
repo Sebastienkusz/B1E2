@@ -118,7 +118,6 @@ then
   echo "ERROR : The Data Collection Endpoint deployment failed. Starting rollback process." 
     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
     az vm delete -g $ResourceGroup -n $BastionVMName --yes
-    az monitor data-collection endpoint -g $ResourceGroup -n $EndPointName --yes
     az monitor data-collection rule delete -g $ResourceGroup -n $DataCollectionRuleName --yes
     az monitor log-analytics workspace delete -g $ResourceGroup -n $WorkSpaceName --yes
     az disk delete -g $ResourceGroup -n $DiskName --yes
@@ -170,8 +169,8 @@ az vm run-command invoke \
 
 
 
-####The code below can be used to deploy the OMS agent on Linux VMs. OMS agent will be deprecated by August 2024, but seems more stable than the AMA agent for now.
-####To use it, you will need to downgrade to UbuntuLTS (change variable in 00_deplot.sh) and downgrade the Nextcloud version to 14, with PHP 7 in the configNextcloudVM file.
+####The code below can be used to deploy the OMS agent on Linux VMs. OMS agent will be deprecated by August 2024.
+####To use it, you will need to downgrade to UbuntuLTS (change variable in 00_deploy.sh) and downgrade the Nextcloud version to 14, with PHP 7 in the configNextcloudVM file.
 
 #Fetch workspace id and key -- will be used to install the agent on VMs
 # myWorkspaceId=$(az monitor log-analytics workspace show --resource-group $ResourceGroup --workspace-name $WorkSpaceName --query customerId -o tsv)

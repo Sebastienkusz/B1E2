@@ -24,10 +24,3 @@ else
   echo "SUCCESS : The network has been deployed"
 fi
 
-
-# Network Interface Card Creation
-# az network nic create \
-#   --resource-group $ResourceGroup \
-#   --name $Nic \
-#   --vnet-name $VNet \
-#   --subnet $Subnet

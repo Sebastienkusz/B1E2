@@ -23,94 +23,24 @@ Etape 2 : A partir du dossier local créé, rendre les fichiers exécutables s'
 >
 `chmod +x *.sh`
 >
-Etape 3 : Lancer le script.\
+Etape 3 : Lancer le script
+
+Avant de lancer le script passez la commande `az login` pour être connecté à votre compte Microsoft Azure.
 Le script peut être lancé sans option
 >
-`./00_deploy`
+`./00_deploy.sh`
 >
 Il est également possible de passer des paramètres lors de l'exécution, afin de personnaliser certains attributs du script. Pour connaitre les options disponibles, utiliser la commande :
 >
-`./00_deploy -h`
->
-Résultat : Les ressources sont créées dans le groupe de ressource b1-e2. \
-L’application Nextcloud est accessible via le lien : https://\
-Il faudra préciser les informations suivantes :
-=======
+`./00_deploy.sh -h`
 
-Ce dépôt regroupe plusieurs fichiers qui permettent l'automatisation d'un déploiement de l'application Nextcloud.
+**Résultat** :
 
-Les fichiers utilisent les langages suivants :
+Les ressources sont créées dans le groupe de ressource b1-e2
 
--	Az CLI
--	Bash 
--	Json 
+L’application Nextcloud est accessible via le lien : 
 
-Les ressources déployées font appel à des fichiers de configuration qui se trouvent dans le dossier `user_data. \`
-
-Pour exécuter ces scripts, il est nécessaire d'avoir un abonnement Microsoft Azure, un éditeur de code (type VSC), d'installer Azure CLI, ainsi que l'extension az cli monitor.
-
-Les clés SSH publiques utilisées pour le déploiement sont stockées dans le dossier `ssh_keys`
-
-Elles correspondent aux clées publiques, individuelles et nominatives, des trois administrateurs de l'infrastructure.
-
-Les clés SSH privées, elles, sont stockées sur la machine de l'utilisateur.
-
-Le chemin vers ce dossier varie en fonction du système d'exploitation utilisé par l'utilisateur.
-
-
-## Déploiement sans modification des variables :
-
-
-**Etape 1 : Récupérer le contenu du dépôt Github**
-
-a) Installer Git sur sa machine (si ce n'est pas déjà fait)
-
-Exemple pour Windows:
-
-`https://git-scm.com/download/win`
-
-b) Dans son terminal
-
-`git clone git@github.com:Simplon-AdminCloud-Bordeaux-2023-2025/B1E2-Nabila-Arnaud-Sebastien.git`
-
-Pour pouvoir le télécharger il faut une clé d'accès SSH (voir avec vos admins sys)
-
-Cela a pour effet de récupérer la structure du repo Github sur la machine en local:
-
-
-
-**Etape 2 : A partir du dossier local créé, rendre les fichiers exécutables s'ils ne le sont pas déjà**
-
-`chmod +x *.sh`
-
-**Etape 3 : Lancer le script**
-
-Lancement du script sans option.
-
-Dans son terminal, on lance:
-
-
-`./00_deploy`
-
-## Déploiement avec modification des variables :
-
-
-
-Il est également possible de passer des paramètres lors de l'exécution, afin de personnaliser certains attributs du script.
-
-Pour connaitre les options disponibles, utiliser la commande :
-
-
-`./00_deploy -h`
-
-
-Résultat :
-
-Par défaut, les ressources sont créées dans le groupe de ressource Azure b1e2-gr1
-
-L’application Nextcloud est accessible via le lien :
-
-`https://esan-preproduction-nextcloud.westeurope.cloudapp.azure.com/`
+https://enas-preproduction-nextcloud.westeurope.cloudapp.azure.com/
 
 
 
@@ -143,10 +73,11 @@ La quasi-totalité des variables peuvent être modifiées via le fichier `00_dep
 `
 
 Voici les variables pour lesquelles il faut être attentif :
-- Modification des noms DNS
-- Modification de l'adminSQL et/ou du passwordadmin SQL sur le fichier 02_bdd.sh
- il faut reporter les changements sur le fichier /user_data/configSQL.sh
-- Modification du user par défaut : il faudra également mettre à jour les informations du fichier adduser.sh
-- Modification du nom du Workspace ou du groupe de ressource: il faudra modifier la ligne .... du fichier dcr.json pour la faire correspondre avec le nouveau WorkspaceID :
 
-(mettre une copie de la ligne en exemple)
+- La modification des variables $PreName et $ClientName a un impact sur les noms DNS dans les fichiers `user_data/configNextcloudVm.sh` et `/user_data/configSQL.sh`. Il faut mettre à jour les lignes .... sur le premier fichier, puis la ligne 5 dans le second fichier.
+- La modification des noms DNS dans le fichier `00_deploy.sh` (lignes 30 et 33) nécessite aussi la modification du fichier `user_data/configNextcloudVm.sh` (lignes...)
+- La modification de l'adminSQL et/ou du passwordadmin SQL sur le fichier `02_bdd.sh`.Il faut également reporter les changements sur le fichier `/user_data/configSQL.sh`
+- La modification du user par défaut et de sa clé publique associée dans le fichier `00_deploy.sh` (lignes 71 et 72). Il faut également mettre à jour les informations du fichier `user_data/adduser.sh` (ligne 5)
+- La modification du nom du Workspace ou du groupe de ressource. Il faut également modifier la ligne 89, du fichier dcr.json, pour la faire correspondre avec le nouveau `workspaceName`, `resourceGroupName` et `subscriptionID`.
+
+"workspaceResourceId":"/subscriptions/`subscriptionID`/resourceGroups/`resourceGroupName`/providers/Microsoft.OperationalInsights/workspaces/`workspaceName`" 

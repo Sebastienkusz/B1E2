@@ -5,12 +5,12 @@ LabelAppliIPName="esan-preproduction-nextcloud"
 Location="westeurope"
 Mailaddress="kusz.sebastien@gmail.com"
 PreName="preproduction-"
-UserSQL="sqluser"
-UserSQLPassword="dauphinvert"
 BddName="nextcloud"
 AdminNextcloudName="Nextcloud2023"
 AdminNextcloudPass="Nextcloud#2023"
 BddDir="/data"
+UserSQL="sqluser"
+UserSQLPassword="dauphinvert"
 SuffixBddUrl=".mysql.database.azure.com"
 BddUrlName=$PreName"bdd-sql"$SuffixBddUrl
 
@@ -49,7 +49,7 @@ sudo -u www-data php occ maintenance:install \
     --database-host="$BddUrlName" \
     --database-name="$BddName" \
     --database-user="$UserSQL" \
-    --database-pass="$UserPassword" \
+    --database-pass="$UserSQLPassword" \
     --data-dir="$BddDir" \
     -n
 sudo -u www-data php occ config:system:set trusted_domains 1 --value=$DNSNextcloud
