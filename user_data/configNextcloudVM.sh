@@ -1,47 +1,52 @@
-#!/bin/bash -x
+#!/bin/bash
 
 # Variables
 LabelAppliIPName="esan-preproduction-nextcloud"
 Location="westeurope"
-Mailaddress="kusz.sebastien@gmail.com"
 PreName="preproduction-"
 BddName="nextcloud"
 AdminNextcloudName="Nextcloud2023"
 AdminNextcloudPass="Nextcloud#2023"
-BddDir="/data"
+BddDir="/nextclouddrive/nextcloud/data"
 UserSQL="sqluser"
 UserSQLPassword="dauphinvert"
 SuffixBddUrl=".mysql.database.azure.com"
 BddUrlName=$PreName"bdd-sql"$SuffixBddUrl
 
-# Fixes
-DNSNextcloud=$LabelAppliIPName"."$Location".cloudapp.azure.com"
 
 # Installation Apache + Nextcloud
 sudo apt -y update
-sudo apt -y update
-sudo apt install -y apache2 libapache2-mod-php
-sudo apt install -y php libapache2-mod-php php-mysql php-xml php-cli php-gd php-curl php-zip php-mbstring php-bcmath
-sudo wget -O /tmp/latest.tar.bz2 https://download.nextcloud.com/server/releases/latest.tar.bz2
-sudo tar -xjvf /tmp/latest.tar.bz2 -C /var/www/
-sudo chown -R www-data:www-data /var/www/nextcloud 
-IPPub=$(curl ifconfig.me)
+sudo apt install -y apache2
+sudo apt install -y php php-apcu php-bcmath php-cli php-common php-curl php-gd php-gmp php-imagick php-intl php-mbstring php-mysql php-zip php-xml
+sudo wget https://download.nextcloud.com/server/releases/latest.zip
+sudo a2enmod dir env headers mime rewrite ssl
+sudo apt install -y unzip
+sudo unzip -d /nextclouddrive/ latest.zip
+sudo chown -R www-data:www-data /nextclouddrive/nextcloud
+
+
 sudo echo "<VirtualHost *:80>
-DocumentRoot "/var/www/nextcloud"
-ServerName $IPPub
-<Directory /var/www/nextcloud>
+ServerAdmin webmaster@localhost
+ServerName enas-preproduction-nextcloud.westeurope.cloudapp.azure.com
+DocumentRoot /nextclouddrive/nextcloud/
+<Directory "/nextclouddrive/nextcloud/">
+Options Multiviews FollowSymlinks
 Require all granted
+Order deny,allow 
 AllowOverride All
-Options FollowSymLinks MultiViews
-<IfModule mod_dav.c>
-Dav off
-</IfModule>
+Allow from all
 </Directory>
-</VirtualHost>" >> /etc/apache2/sites-available/nextcloud.conf
-a2dissite 000-default.conf
-a2ensite nextcloud.conf
-systemctl reload apache2
-cd /var/www/nextcloud/
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>" > /etc/apache2/sites-available/nextcloud.conf
+sudo a2dissite 000-default.conf
+sudo a2ensite nextcloud.conf
+sudo systemctl reload apache2
+
+sudo -u www-data php /nextclouddrive/nextcloud/occ
+sudo chmod 744 /nextclouddrive/nextcloud/occ
+cd /nextclouddrive/nextcloud/
+
 sudo -u www-data php occ maintenance:install \
     --database="mysql" \
     --admin-user="$AdminNextcloudName" \
@@ -52,13 +57,15 @@ sudo -u www-data php occ maintenance:install \
     --database-pass="$UserSQLPassword" \
     --data-dir="$BddDir" \
     -n
+
 sudo -u www-data php occ config:system:set trusted_domains 1 --value=$DNSNextcloud
 cd
 sudo apt -y install snapd
 sudo snap install core; sudo snap refresh core
 sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-sudo certbot --apache -d $DNSNextcloud --agree-tos -m $Mailaddress -n
+sudo certbot --apache -d $DNSNextcloud -n --agree-tos --register-unsafely-without-email 
+
+sudo systemctl restart apache2
 
 sudo chmod 777 /etc/crontab
 sudo echo "SHELL=/bin/sh

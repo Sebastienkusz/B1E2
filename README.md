@@ -37,15 +37,15 @@ Il est également possible de passer des paramètres lors de l'exécution, afin 
 
 **Résultat** :
 
-Les ressources sont créées dans le groupe de ressource b1e2-gr1
+Les ressources sont créées dans le groupe de ressource b1-e2-gr1
 
 L’application Nextcloud est accessible via le lien : 
 
 https://esan-preproduction-nextcloud.westeurope.cloudapp.azure.com/
 
+Les champs du formulaire de création du compte d'administrateur sont normalement pré-remplis (il ne vous reste qu'à choisir un nom d'utilisateur admin et son mot de passe).
 
-
-Il faudra préciser les informations suivantes :
+Si ce n'est pas le cas, il faudra préciser les informations suivantes :
 
 
 
@@ -54,10 +54,10 @@ Il faudra préciser les informations suivantes :
 | Nom d'utilisateur | Le nom que vous voulez | |
 | Mot de passe | Celui que vous voulez | |
 | | | |
-| Répertoire de données | **/data** | |
+| Répertoire de données | **/nextclouddrive/nextcloud/data** | |
 | | |
-| Utilisateur de la base de données | le paramètre **User** défini dans le fichier configSQL.sh | sqluser |
-| Mot de passe de la base de données | le paramètre **Password** défini dans le fichier configSQL.sh | dauphinvert |
+| Utilisateur de la base de données | le paramètre **User** défini dans le fichier configSQL.sh | sqluser ou adminsql |
+| Mot de passe de la base de données | le paramètre **Password** défini dans le fichier configSQL.sh | dauphinvert ou dauphinrouge |
 | Nom de la base de données | le paramètre **BddName** défini dans le fichier configSQL.sh | nextcloud |
 | Localhost | le paramètre **BDDName** défini dans le fichier 00_deploy.sh | preproduction-bdd-sql.mysql.database.azure.com |
 | | | |
@@ -75,10 +75,10 @@ La quasi-totalité des variables peuvent être modifiées via le fichier `00_dep
 
 Voici les variables pour lesquelles il faut être attentif :
 
-- La modification des variables $PreName et $ClientName a un impact sur les noms DNS dans les fichiers `user_data/configNextcloudVm.sh` et `/user_data/configSQL.sh`. Il faut mettre à jour les lignes .... sur le premier fichier, puis la ligne 5 dans le second fichier.
-- La modification des noms DNS dans le fichier `00_deploy.sh` (lignes 30 et 33) nécessite aussi la modification du fichier `user_data/configNextcloudVm.sh` (lignes...)
+- La modification des variables $PreName et $ClientName a un impact sur les noms DNS dans les fichiers `user_data/configNextcloudVm.sh` et `/user_data/configSQL.sh`. Il faut mettre à jour les lignes 17, 38 et 44 sur le premier fichier, puis la ligne 5 dans le second fichier.
+- La modification des noms DNS dans le fichier `00_deploy.sh` (lignes 30 et 33) nécessite aussi la modification du fichier `user_data/configNextcloudVm.sh` (lignes 17, 38 et 44)
 - La modification de l'adminSQL et/ou du passwordadmin SQL sur le fichier `02_bdd.sh`.Il faut également reporter les changements sur le fichier `/user_data/configSQL.sh`
 - La modification du user par défaut et de sa clé publique associée dans le fichier `00_deploy.sh` (lignes 71 et 72). Il faut également mettre à jour les informations du fichier `user_data/adduser.sh` (ligne 5)
-- La modification du nom du Workspace ou du groupe de ressource. Il faut également modifier la ligne 89, du fichier dcr.json, pour la faire correspondre avec le nouveau `workspaceName`, `resourceGroupName` et `subscriptionID`.
+- La modification du nom du Workspace, du groupe de ressource ou du nom du client. Il faut également modifier la ligne 89, du fichier dcr.json, pour la faire correspondre avec le nouveau `workspaceName`, `resourceGroupName` et `subscriptionID`.
 
 "workspaceResourceId":"/subscriptions/`subscriptionID`/resourceGroups/`resourceGroupName`/providers/Microsoft.OperationalInsights/workspaces/`workspaceName`" 

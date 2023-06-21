@@ -29,15 +29,3 @@ az backup protection backup-now \
     --retain-until 31-12-2024
 
 
-#Delete Backup Vault 
-az backup protection disable \
-    --resource-group myResourceGroup \
-    --vault-name myRecoveryServicesVault \
-    --container-name myVM \
-    --item-name myVM \
-    --backup-management-type AzureIaaSVM\
-    --delete-backup-data true
-
-# az backup vault delete \
-#     --resource-group myResourceGroup \
-#     --name myRecoveryServicesVault \
