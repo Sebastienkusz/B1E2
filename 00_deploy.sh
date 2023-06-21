@@ -32,42 +32,56 @@ export LabelBastionIPName=$Client$PreName"bastion"
 # Label Public IP VM Application Variables
 export LabelAppliIPName=$Client$PreName"nextcloud"
 
-#Noms des NSG
+# NSG name
 export NsgAppliName=$PreName"nsg-nextcloud"
 export NsgBastionName=$PreName"nsg-bastion"
 
-#Filtering nsg rules
+# Filtering nsg rules
 export NsgBastionRuleIPFilter="82.126.234.200"
 export NsgBastionRuleSshPort="10022"
 
 
 #Resources names
-export BastionVMName=$PreName"vm-bastion"
-export NextcloudVMName=$PreName"vm-nextcloud"
-export BDDName=$PreName"bdd-sql"
-export BackupBDDName=$PreName"backupbdd-sql"
-export BackupVaultName=$PreName"backupvault"
-export DiskName=$PreName"disk-nextcloud"
+## BDD
+export SuffixBddUrl=".mysql.database.azure.com"
 
+export AdminSQL="adminsql"
+export AdminSQLPassword="dauphinrouge"
+export UserSQL="sqluser"
+export UserSQLPassword="dauphinvert"
+export BddName="nextcloud"
+export BddAzName=$PreName"bdd-sql"
+export BddUrlName=$PreName"bdd-sql"$SuffixBddUrl
+export BackupBDDName=$PreName"backupbdd-sql"
+
+# OS image
 export ImageOs="Ubuntu2204"
+
+## Bastion VM
+export BastionVMName=$PreName"vm-bastion"
 export BastionVMSize="Standard_B2s"
-export NextcloudVMSize="Standard_D2s_v3"
 export OSDiskBastion=$PreName"OSDisk-Bastion"
 export OSDiskBastionSizeGB="30"
 export OSDiskBastionSku="Standard_LRS"
+export BastionVMIPprivate="11.0.0.5"
 
+## Nextcloud VM
+export NextcloudVMName=$PreName"vm-nextcloud"
+export NextcloudVMSize="Standard_D2s_v3"
+export NextcloudVMIPprivate="11.0.0.6"
+export DiskName=$PreName"disk-nextcloud"
 export DataDiskNextcloudSize="1024"
 
-export BastionVMIPprivate="11.0.0.5"
-export NextcloudVMIPprivate="11.0.0.6"
+## Other
+export BackupVaultName=$PreName"backupvault"
 
-#Monitoring variables
+# Monitoring variables
 export WorkSpaceName=$Client$PreName"workspace"
 export DataCollectionRuleName=$Client$PreName"datacollectionrule"
 export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
 export EndPointName=$Client$PreName"endpoint"
 
-#Default user
+# Default user
 export Username="nabila"
 export SshPublicKeyFile="nab_rsa.pub"
 
@@ -101,11 +115,6 @@ while getopts "hs:n:l:" option; do
     esac
 done
 
-# BDD
-export BDDUrlName=$PreName"bdd-sql"
-export BddName="nextcloud"
-
-
 # Network deployment
 ./01_network.sh 
 
@@ -115,7 +124,7 @@ if [ $killProcess -eq 1 ]; then
 fi
 
 # SQL
-#./02_bdd.sh
+./02_bdd.sh
 
 killProcess=$?
 if [ $killProcess -eq 1 ]; then
@@ -130,51 +139,51 @@ if [ $killProcess -eq 1 ]; then
     exit
 fi
 
-# Monitoring
-./04_monitoring.sh
+# # Monitoring
+# ./04_monitoring.sh
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
-    exit
-fi
+# killProcess=$?
+# if [ $killProcess -eq 1 ]; then
+#     exit
+# fi
 
-#BackupService
-# ./05_backup.sh
+# #BackupService
+# # ./05_backup.sh
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
-    exit
-fi
+# killProcess=$?
+# if [ $killProcess -eq 1 ]; then
+#     exit
+# fi
 
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"
-az network public-ip show --resource-group $ResourceGroup --name $AppliIPName --query "{address: ipAddress}"
+# echo "---------------------------------------------------------------------------------------------------------------"
+# echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"
+# az network public-ip show --resource-group $ResourceGroup --name $AppliIPName --query "{address: ipAddress}"
 
-echo "créer le compte administrateur de nextcloud avant de continuer"
+# echo "créer le compte administrateur de nextcloud avant de continuer"
 
-echo "Voir les informations sur le Readme"
+# echo "Voir les informations sur le Readme"
 
-echo "nom de la bdd : " $BddName
-echo "adresse du serveur : " $BDDUrlName.mysql.database.azure.com
+# echo "nom de la bdd : " $BddName
+# echo "adresse du serveur : " $BDDUrlName.mysql.database.azure.com
 
-echo "Taper le mot entre crochet pour continuer [Nextcloud]"
-read mot
-while
-[ "$mot" = "Nextcloud" ]
-do
-echo "Taper le mot entre crochet pour continuer [Nextcloud]"
-read mot
-done
+# echo "Taper le mot entre crochet pour continuer [Nextcloud]"
+# read mot
+# while
+# [ "$mot" = "Nextcloud" ]
+# do
+# echo "Taper le mot entre crochet pour continuer [Nextcloud]"
+# read mot
+# done
 
-#Ajout des utilisateurs admins à la VM Nextcloud
-az vm run-command invoke \
-    --resource-group $ResourceGroup \
-    --name $NextcloudVMName \
-    --command-id RunShellScript \
-    --scripts @./user_data/Post_install.sh
+# #Ajout des utilisateurs admins à la VM Nextcloud
+# az vm run-command invoke \
+#     --resource-group $ResourceGroup \
+#     --name $NextcloudVMName \
+#     --command-id RunShellScript \
+#     --scripts @./user_data/Post_install.sh
 
 
-az vm run-command invoke --resource-group $ResourceGroup --name $NextcloudVMName --command-id RunShellScript --scripts @./user_data/Post_install.sh
+# az vm run-command invoke --resource-group $ResourceGroup --name $NextcloudVMName --command-id RunShellScript --scripts @./user_data/Post_install.sh
 
 
 echo "---------------------------------------------------------------------------------------------------------------"

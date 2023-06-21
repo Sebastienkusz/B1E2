@@ -24,9 +24,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Log Monitoring Workspace has been deployed."
@@ -75,9 +75,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Data Collection Rule has been deployed."
@@ -95,7 +95,7 @@ az monitor data-collection rule association create \
 az monitor data-collection rule association create \
   --name $DataCollectionRuleAssociationName \
   --rule-id $ResourceGroupID/providers/Microsoft.Insights/dataCollectionRules/$DataCollectionRuleName \
-  --resource $BastionVMNid
+  --resource $BastionVMid
 
 
 
@@ -126,9 +126,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Data Collection Endpoint has been deployed."

@@ -15,7 +15,7 @@ else
 fi
 
 #Testing if the deployment was successful
-if [[ $(az resource list -g $ResourceGroup --query "[?name == '$VNet']" -o tsv) != "" ]]
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$VNet']" -o tsv) == "" ]]
 then
   echo "ERROR : The network deployment failed. Starting rollback process."
   az network vnet delete -g $ResourceGroup -n $VNet
