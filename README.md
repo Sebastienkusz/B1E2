@@ -10,7 +10,8 @@ Les fichiers utilisent les langages suivants :
 -	Json 
 >
 Les ressources déployées font appel à des fichiers de configuration qui se trouvent dans le dossier user_data. \
-Pour exécuter ces scripts, il est nécessaire d'avoir un abonnement Azure, un éditeur de code (type VSC), d'installer azure CLI, ainsi que l'extension az cli monitor.
+Pour exécuter ces scripts, il est nécessaire d'avoir un abonnement Azure, un éditeur de code (type VSC), d'installer Azure CLI, ainsi que l'extension az cli monitor.
+
 Les clés SSH publiques utilisées pour le déploiement sont stockées dans le dossier 'ssh_keys'. Elles correspondent aux clées publiques, individuelles et nominatives, des trois administrateurs de l'infrastructure.
 
 ## Déploiement sans modification des variables :
@@ -36,11 +37,11 @@ Il est également possible de passer des paramètres lors de l'exécution, afin 
 
 **Résultat** :
 
-Les ressources sont créées dans le groupe de ressource b1-e2
+Les ressources sont créées dans le groupe de ressource b1-e2-gr1
 
 L’application Nextcloud est accessible via le lien : 
 
-https://enas-preproduction-nextcloud.westeurope.cloudapp.azure.com/
+https://esan-preproduction-nextcloud.westeurope.cloudapp.azure.com/
 
 
 
