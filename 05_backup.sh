@@ -3,7 +3,7 @@
 #Create a backup for mysql flexible-server
 az mysql flexible-server backup create \
     --backup-name $BackupBDDName \
-    --name $BDDName \
+    --name $BddAzName \
     --resource-group $ResourceGroup
 
 #Create Backup Vault
