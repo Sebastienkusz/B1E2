@@ -37,7 +37,7 @@ Il est également possible de passer des paramètres lors de l'exécution, afin 
 
 **Résultat** :
 
-Les ressources sont créées dans le groupe de ressource b1-e2-gr1
+Les ressources sont créées dans le groupe de ressource b1e2-gr1
 
 L’application Nextcloud est accessible via le lien : 
 
