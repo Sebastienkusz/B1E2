@@ -13,6 +13,8 @@ UserSQLPassword="dauphinvert"
 SuffixBddUrl=".mysql.database.azure.com"
 BddUrlName=$PreName"bdd-sql"$SuffixBddUrl
 
+# Fixes
+DNSNextcloud=$LabelAppliIPName"."$Location".cloudapp.azure.com"
 
 # Installation Apache + Nextcloud
 sudo apt -y update
