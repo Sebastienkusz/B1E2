@@ -45,4 +45,3 @@ sudo mount -a
 
 #Give writing rights into the managed disk to web app
 sudo chown -R www-data:www-data /data
-

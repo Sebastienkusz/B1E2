@@ -43,9 +43,9 @@ if [[ $(az resource list -g $ResourceGroup --query "[?name == '$NsgBastionName']
 then
     echo "ERROR : The Bastion NSG deployment failed. Starting rollback process."
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Bastion NSG has been deployed."
@@ -109,9 +109,9 @@ then
     echo "ERROR : The Bastion NSG deployment failed. Starting rollback process."
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1 
 else
     echo "SUCCESS : The Nextcloud NSG has been deployed."
@@ -139,9 +139,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Bastion VM public IP has been deployed."
@@ -172,9 +172,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Nextcloud VM public IP has been deployed."
@@ -230,9 +230,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1  
 else
     echo "SUCCESS : The Bastion VM has been deployed."
@@ -274,9 +274,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Nextcloud VM has been deployed."
@@ -291,7 +291,7 @@ else
     az disk create \
         --resource-group $ResourceGroup \
         --name $DiskName \
-        --size-gb 1024 \
+        --size-gb $DataDiskNextcloudSize \
         --sku StandardSSD_LRS \
         --encryption-type EncryptionAtRestWithPlatformKey
 fi
@@ -328,9 +328,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Managed Disk has been deployed."
