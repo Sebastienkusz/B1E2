@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-LabelAppliIPName="esan-preproduction-nextcloud"
+LabelAppliIPName="enas-preproduction-nextcloud"
 Location="westeurope"
 PreName="preproduction-"
 BddName="nextcloud"
@@ -28,7 +28,7 @@ sudo chown -R www-data:www-data /nextclouddrive/nextcloud
 
 
 sudo echo "<VirtualHost *:80>
-ServerAdmin webmaster@localhost
+ServerAdmin webmaster@enas-preproduction-nextcloud.westeurope.cloudapp.azure.com
 ServerName enas-preproduction-nextcloud.westeurope.cloudapp.azure.com
 DocumentRoot /nextclouddrive/nextcloud/
 <Directory "/nextclouddrive/nextcloud/">
