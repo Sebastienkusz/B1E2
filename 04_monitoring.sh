@@ -24,9 +24,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Log Monitoring Workspace has been deployed."
@@ -75,9 +75,9 @@ then
     az network public-ip delete -g $ResourceGroup -n $BastionIPName
     az network nsg delete -g $ResourceGroup -n $NsgAppliName
     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-    az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
     az network vnet delete -g $ResourceGroup -n $VNet
-    az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
     exit 1
 else
     echo "SUCCESS : The Data Collection Rule has been deployed."
@@ -96,6 +96,40 @@ az monitor data-collection rule association create \
   --name $DataCollectionRuleAssociationName \
   --rule-id $ResourceGroupID/providers/Microsoft.Insights/dataCollectionRules/$DataCollectionRuleName \
   --resource $BastionVMid
+
+#Creation of an endpoint to allow communication between the agent on VMs and the Azure Monitoring platform
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$EndPointName']" -o tsv) != "" ]] 
+then
+    echo "The Data Collection Endpoint already exists."
+else
+  echo "Creating Data Collection Endpoint"
+  az monitor data-collection endpoint create \
+    --name $EndPointName \
+    --resource-group $ResourceGroup \
+    --location $Location \
+    --public-network-access "enabled"
+fi
+
+#Testing if the deployment was successful
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$EndPointName']" -o tsv) == "" ]]  
+then
+  echo "ERROR : The Data Collection Endpoint deployment failed. Starting rollback process." 
+    az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
+    az vm delete -g $ResourceGroup -n $BastionVMName --yes
+    az monitor data-collection rule delete -g $ResourceGroup -n $DataCollectionRuleName --yes
+    az monitor log-analytics workspace delete -g $ResourceGroup -n $WorkSpaceName --yes
+    az disk delete -g $ResourceGroup -n $DiskName --yes
+    az network public-ip delete -g $ResourceGroup -n $AppliIPName
+    az network public-ip delete -g $ResourceGroup -n $BastionIPName
+    az network nsg delete -g $ResourceGroup -n $NsgAppliName
+    az network nsg delete -g $ResourceGroup -n $NsgBastionName
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
+    az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    exit 1
+else
+    echo "SUCCESS : The Data Collection Endpoint has been deployed."
+fi
 
 #Add a microsoft extension to VMs, to handle the monitoring agent
 az vm extension set \
