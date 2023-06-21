@@ -41,7 +41,7 @@ Les ressources sont créées dans le groupe de ressource b1-e2-gr1
 
 L’application Nextcloud est accessible via le lien : 
 
-https://esan-preproduction-nextcloud.westeurope.cloudapp.azure.com/
+https://enas-preproduction-nextcloud.westeurope.cloudapp.azure.com/
 
 Les champs du formulaire de création du compte d'administrateur sont normalement pré-remplis (il ne vous reste qu'à choisir un nom d'utilisateur admin et son mot de passe).
 
