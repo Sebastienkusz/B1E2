@@ -6,7 +6,7 @@ export ResourceGroup="b1e2-gr1"
 export Location="westeurope"
 export Zone="3"
 export PreName="preproduction-"
-export Client="esan-"
+export Client="enas-"
 
 # Virtual Network
 export VNet=$PreName"network-nextcloud"
@@ -65,16 +65,16 @@ export NextcloudVMIPprivate="11.0.0.6"
 export WorkSpaceName=$Client$PreName"workspace"
 export DataCollectionRuleName=$Client$PreName"datacollectionrule"
 export DataCollectionRuleAssociationName=$Client$PreName"datacollectionruleassociation"
-export EndPointName=$Client$PreName"endpoint"
+# export EndPointName=$Client$PreName"endpoint"
 
 #Default user
 export Username="nabila"
 export SshPublicKeyFile="nab_rsa.pub"
 
 #Variable used to evaluate the error status during the script execution
-export killProcess=0
+export endProcess=0
 
-#
+#Help command
 Help() {
     echo "This is a Nextcloud deployment script. It can be deployed with no options or with the following options."
     echo "Execution syntax with no options : ./00_deploy"
@@ -102,80 +102,42 @@ while getopts "hs:n:l:" option; do
     esac
 done
 
-# BDD
-export BDDUrlName=$PreName"bdd-sql"
-export BddName="nextcloud"
-
 
 # Network deployment
 ./01_network.sh 
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
+endProcess=$?
+if [ $endProcess -eq 1 ]; then
     exit
 fi
 
 # SQL
 ./02_bdd.sh
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
+endProcess=$?
+if [ $endProcess -eq 1 ]; then
     exit
 fi
 
 #VM
 ./03_virtMachine.sh
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
+endProcess=$?
+if [ $endProcess -eq 1 ]; then
     exit
 fi
 
 # Monitoring
 ./04_monitoring.sh
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
+endProcess=$?
+if [ $endProcess -eq 1 ]; then
     exit
 fi
 
 #BackupService
 ./05_backup.sh
 
-killProcess=$?
-if [ $killProcess -eq 1 ]; then
-    exit
-fi
-
-echo "---------------------------------------------------------------------------------------------------------------"
-echo "Aller sur votre navigateur web et connectez-vous à l'adresse suivante :"
-az network public-ip show --resource-group $ResourceGroup --name $AppliIPName --query "{address: ipAddress}"
-
-echo "créer le compte administrateur de nextcloud avant de continuer"
-
-echo "Voir les informations sur le Readme"
-
-echo "nom de la bdd : " $BddName
-echo "adresse du serveur : " $BDDUrlName.mysql.database.azure.com
-
-echo "Taper le mot entre crochet pour continuer [Nextcloud]"
-read mot
-while
-[ "$mot" = "Nextcloud" ]
-do
-echo "Taper le mot entre crochet pour continuer [Nextcloud]"
-read mot
-done
-
-#Ajout des utilisateurs admins à la VM Nextcloud
-az vm run-command invoke \
-    --resource-group $ResourceGroup \
-    --name $NextcloudVMName \
-    --command-id RunShellScript \
-    --scripts @./user_data/Post_install.sh
-
-
-az vm run-command invoke --resource-group $ResourceGroup --name $NextcloudVMName --command-id RunShellScript --scripts @./user_data/Post_install.sh
 
 
 echo "---------------------------------------------------------------------------------------------------------------"

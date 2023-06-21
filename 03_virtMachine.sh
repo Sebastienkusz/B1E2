@@ -195,7 +195,6 @@ az network public-ip update \
  --allocation-method Static
 
 ################# VM Bastion ##################
-
 #Creating Bastion VM 
 if [[ $(az resource list -g $ResourceGroup --query "[?name == '$BastionVMName']" -o tsv) != "" ]]
 then
@@ -260,7 +259,6 @@ else
         --private-ip-address $NextcloudVMIPprivate \
         --nic-delete-option delete \
         --os-disk-delete-option delete \
-        --custom-data user_data/configNextcloudVM.sh \
         --ssh-key-value ssh_keys/$SshPublicKeyFile
 fi
 
@@ -282,7 +280,7 @@ else
     echo "SUCCESS : The Nextcloud VM has been deployed."
 fi
 
-#Creating encrypted managed disk. The encryption is handled by the Azure platform
+#Creating encrypted managed disk. The encryption is handled by the Azure platform.
 if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DiskName']" -o tsv) != "" ]]  
 then
     echo "The Managed Disk already exists."
@@ -296,26 +294,18 @@ else
         --encryption-type EncryptionAtRestWithPlatformKey
 fi
 
-#Running data base configuration script on Nextcloud VM
-az vm run-command invoke \
+#Attaching managed disk on Nextcloud VM
+az vm disk attach \
     --resource-group $ResourceGroup \
-    --name $NextcloudVMName \
-    --command-id RunShellScript \
-    --scripts @user_data/configSQL.sh 
+    --vm-name $NextcloudVMName \
+    --name $DiskName \
 
-#Running add administrator to Bastion VM
+#Running mount disk script on Nextcloud VM
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    --name $BastionVMName \
+    -n $NextcloudVMName \
     --command-id RunShellScript \
-    --scripts @./user_data/addusers.sh
-
-#Running add administrator to Nextcloud VM
-az vm run-command invoke \
-    --resource-group $ResourceGroup \
-    --name $NextcloudVMName \
-    --command-id RunShellScript \
-    --scripts @./user_data/addusers.sh
+    --scripts @user_data/mountDisk.sh 
 
 #Testing if the deployment was successful
 if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DiskName']" -o tsv) == "" ]]  
@@ -336,15 +326,33 @@ else
     echo "SUCCESS : The Managed Disk has been deployed."
 fi
 
-#Attaching managed disk on Nextcloud VM
-az vm disk attach \
-    --resource-group $ResourceGroup \
-    --vm-name $NextcloudVMName \
-    --name $DiskName \
-
-#Running mount disk script on Nextcloud VM
+#Running data base configuration script on Nextcloud VM
 az vm run-command invoke \
     --resource-group $ResourceGroup \
-    -n $NextcloudVMName \
+    --name $NextcloudVMName \
     --command-id RunShellScript \
-    --scripts @user_data/mountDisk.sh 
+    --scripts @user_data/configSQL.sh 
+
+#Configuring the Nextcloud installation on the application VM
+az vm run-command invoke \
+    --resource-group $ResourceGroup \
+    --name $NextcloudVMName \
+    --command-id RunShellScript \
+    --scripts @user_data/configNextcloudVM.sh
+
+#Running add administrator to Bastion VM
+az vm run-command invoke \
+    --resource-group $ResourceGroup \
+    --name $BastionVMName \
+    --command-id RunShellScript \
+    --scripts @./user_data/addusers.sh
+
+#Running add administrator to Nextcloud VM
+az vm run-command invoke \
+    --resource-group $ResourceGroup \
+    --name $NextcloudVMName \
+    --command-id RunShellScript \
+    --scripts @./user_data/addusers.sh
+
+
+
