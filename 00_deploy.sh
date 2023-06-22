@@ -172,5 +172,5 @@ echo " - adresse ip privée : "$NextcloudVMIPprivate
 echo " - exemple de Connexion ssh : ssh "$Username"@"$NextcloudVMIPprivate
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
-echo " Adresse Internet : "$LabelAppliIPName"."$Location".cloudapp.azure.com"
+echo " Adresse Internet : "https://"$LabelAppliIPName"."$Location".cloudapp.azure.com"
 echo "---------------------------------------------------------------------------------------------------------------"
