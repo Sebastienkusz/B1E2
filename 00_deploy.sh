@@ -154,7 +154,7 @@ fi
 
 echo "---------------------------------------------------------------------------------------------------------------"
 echo " "
-echo " Infrastruture déployée "
+echo " Infrastructure déployée "
 echo " ---------------------- "
 echo " Bastion :"
 echo " - fqdn : "$LabelBastionIPName"."$Location".cloudapp.azure.com"
