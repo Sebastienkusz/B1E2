@@ -48,6 +48,40 @@ az vm identity assign \
   -g $ResourceGroup \
   --name $BastionVMName
 
+#Creating Data rule collection (DCR) based on json file. This rule will send performance data, windows events and syslog to the loganalytic workspace
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DataCollectionRuleName']" -o tsv) != "" ]] 
+then
+    echo "The Data Collection Rule already exists."
+else
+    echo "Creating Data Collection Rule"
+    az monitor data-collection rule create \
+      --resource-group $ResourceGroup \
+      --location $Location \
+      --name $DataCollectionRuleName \
+      --rule-file "dcr.json"
+fi
+
+#Testing if the deployment was successful
+if [[ $(az resource list -g $ResourceGroup --query "[?name == '$DataCollectionRuleName']" -o tsv) == "" ]] 
+then
+    echo "ERROR : The Data Collection Rule deployment failed. Starting rollback process." 
+    az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
+    az vm delete -g $ResourceGroup -n $BastionVMName --yes
+    az monitor data-collection rule delete -g $ResourceGroup -n $DataCollectionRuleName --yes
+    az monitor log-analytics workspace delete -g $ResourceGroup -n $WorkSpaceName --yes
+    az disk delete -g $ResourceGroup -n $DiskName --yes
+    az network public-ip delete -g $ResourceGroup -n $AppliIPName
+    az network public-ip delete -g $ResourceGroup -n $BastionIPName
+    az network nsg delete -g $ResourceGroup -n $NsgAppliName
+    az network nsg delete -g $ResourceGroup -n $NsgBastionName
+    az mysql flexible-server delete -g $ResourceGroup -n $BddAzName --yes
+    az network vnet delete -g $ResourceGroup -n $VNet
+    az network private-dns zone delete --name $BddAzName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
+    exit 1
+else
+    echo "SUCCESS : The Data Collection Rule has been deployed."
+fi
+
 #Association of the DCR with VMs
 az monitor data-collection rule association create \
   --name $DataCollectionRuleAssociationName \
