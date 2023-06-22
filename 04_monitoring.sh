@@ -125,43 +125,6 @@ az vm run-command invoke \
     --scripts "sudo wget -O Forwarder_AMA_installer.py https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/Syslog/Forwarder_AMA_installer.py&&sudo python3 Forwarder_AMA_installer.py"
 
 
-
-#Creation of an endpoint to allow communication between the agent on VMs and the Azure Monitoring platform. Used for cloud hybrid infrastructures
-# if [[ $(az resource list -g $ResourceGroup --query "[?name == '$EndPointName']" -o tsv) != "" ]] 
-# then
-#     echo "The Data Collection Endpoint already exists."
-# else
-#   echo "Creating Data Collection Endpoint"
-#   az monitor data-collection endpoint create \
-#     --name $EndPointName \
-#     --resource-group $ResourceGroup \
-#     --location $Location \
-#     --public-network-access "enabled"
-# fi
-
-#Testing if the deployment was successful
-# if [[ $(az resource list -g $ResourceGroup --query "[?name == '$EndPointName']" -o tsv) == "" ]]  
-# then
-#   echo "ERROR : The Data Collection Endpoint deployment failed. Starting rollback process." 
-#     az vm delete -g $ResourceGroup -n $NextcloudVMName --yes
-#     az vm delete -g $ResourceGroup -n $BastionVMName --yes
-#     az monitor data-collection rule delete -g $ResourceGroup -n $DataCollectionRuleName --yes
-#     az monitor log-analytics workspace delete -g $ResourceGroup -n $WorkSpaceName --yes
-#     az disk delete -g $ResourceGroup -n $DiskName --yes
-#     az network public-ip delete -g $ResourceGroup -n $AppliIPName
-#     az network public-ip delete -g $ResourceGroup -n $BastionIPName
-#     az network nsg delete -g $ResourceGroup -n $NsgAppliName
-#     az network nsg delete -g $ResourceGroup -n $NsgBastionName
-#     az mysql flexible-server delete -g $ResourceGroup -n $BDDName --yes
-#     az network vnet delete -g $ResourceGroup -n $VNet
-#     az monitor data-collection endpoint -g $ResourceGroup -n $EndPointName --yes
-#     az network private-dns zone delete --name $BDDName.private.mysql.database.azure.com --resource-group $ResourceGroup --yes
-#     exit 1
-# else
-#     echo "SUCCESS : The Data Collection Endpoint has been deployed."
-# fi
-
-
 ####The code below can be used to deploy the OMS agent on Linux VMs. OMS agent will be deprecated by August 2024.
 ####To use it, you will need to downgrade to UbuntuLTS (change variable in 00_deploy.sh) and downgrade the Nextcloud version to 14, with PHP 7 in the configNextcloudVM file.
 
